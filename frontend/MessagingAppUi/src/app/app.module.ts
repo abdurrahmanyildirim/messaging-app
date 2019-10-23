@@ -10,15 +10,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //Components
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
 import { AuthService } from './services/auth.service';
+import { AuthComponent } from './components/auth/auth.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
-    LoginComponent
+    AuthComponent,
+    LoginComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

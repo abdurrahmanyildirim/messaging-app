@@ -1,0 +1,32 @@
+<h5 class="card-title text-center"><b>Üye Ol</b></h5>
+<form class="form-signin" [formGroup]="registerForm" (ngSubmit)="register()">
+  <div class="form-group">
+    <input type="text" class="form-control btn-radius" name="firstName" formControlName="firstName" placeholder="İsim" required autofocus>
+  </div>
+
+  <div class="form-group">
+    <input type="text" class="form-control btn-radius" name="lastName"  formControlName="lastName" placeholder="Soyisim" required>
+  </div>
+
+  <div class="form-group">
+    <input type="text" class="form-control btn-radius"  name="nickName" (change)="checkNickName($event.target.value)" placeholder="Kullanıcı Adı" required>
+  </div>
+
+  <div class="form-group">
+    <input type="email" formControlName="email" name="email" class="form-control btn-radius" placeholder="Email Adresi" required>
+  </div>
+
+  <hr>
+
+  <div class="form-group">
+    <input type="password" formControlName="password" name="password"  class="form-control btn-radius" placeholder="Şifre" required>
+  </div>
+
+  <div class="form-group">
+    <input type="password" formControlName="confirmPassword" name="confirmPassword"  class="form-control btn-radius" placeholder="Şifre Tekrar"
+      required>
+  </div>
+
+  <button class="btn btn-lg btn-primary btn-block text-uppercase" [disabled]="!registerForm.valid" type="submit">Üye Ol</button>
+  <a class="d-block text-center mt-2 small" routerLink='/auth/login'>Giriş Yap</a>
+</form>

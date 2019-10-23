@@ -6,9 +6,12 @@ var port = process.env.PORT || 3000;
 var db = require('./app_server/models/db');
 var bodyParser = require('body-parser');
 var User = require('./app_server/models/user');
+var cors = require('cors')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(cors());
 
 require('./app_server/routes/routeManager')(app);
 require('./app_server/socket-files/chat')(io);

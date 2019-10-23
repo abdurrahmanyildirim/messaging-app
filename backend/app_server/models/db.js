@@ -1,10 +1,8 @@
 var mongoose = require('mongoose');
 
-mongoose.Promise = require('bluebird')
-
 var mongoDb = 'mongodb://localhost/MessaginApp';
 
-mongoose.connect(mongoDb,{useNewUrlParser: true}, (err) => {
+mongoose.connect(mongoDb, {useUnifiedTopology: true , useCreateIndex: true, useNewUrlParser: true }, (err) => {
     if (err) {
         console.log(err);
     } else {
