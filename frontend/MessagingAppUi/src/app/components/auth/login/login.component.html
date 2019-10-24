@@ -1,13 +1,14 @@
 <h5 class="card-title text-center"><b>Giriş Yap</b></h5>
-<form class="form-signin">
+<form [formGroup]="loginForm" (ngSubmit)="login()" class="form-signin">
   <div class="form-group">
-    <input type="email" id="inputEmail" class="form-control btn-radius" placeholder="Email Adresi" required>
+    <input type="email" formControlName="email" class="form-control btn-radius" placeholder="Email Adresi" required>
   </div>
 
   <div class="form-group">
-    <input type="password" id="inputPassword" class="form-control btn-radius" placeholder="Şifre" required>
+    <input type="password" formControlName="password" class="form-control btn-radius" placeholder="Şifre" required>
   </div>
 
-  <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Giriş Yap</button>
+  <button class="btn btn-lg btn-primary btn-block text-uppercase" [disabled]="!loginForm.valid" type="submit">Giriş
+    Yap</button>
   <a class="d-block text-center mt-2 small" routerLink='/auth/register'>Üye Ol</a>
 </form>

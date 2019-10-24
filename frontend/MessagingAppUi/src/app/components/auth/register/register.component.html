@@ -1,32 +1,83 @@
 <h5 class="card-title text-center"><b>Üye Ol</b></h5>
 <form class="form-signin" [formGroup]="registerForm" (ngSubmit)="register()">
   <div class="form-group">
-    <input type="text" class="form-control btn-radius" name="firstName" formControlName="firstName" placeholder="İsim" required autofocus>
+    <input type="text" class="form-control btn-radius" name="firstName" formControlName="firstName" placeholder="İsim"
+      required autofocus>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('firstName').hasError('required') && registerForm.get('firstName').touched">
+      *İsim alanı zorunlu.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('firstName').hasError('maxlength') && registerForm.get('firstName').touched">
+      *50 karakterden fazla olamaz.
+    </span>
+
   </div>
 
   <div class="form-group">
-    <input type="text" class="form-control btn-radius" name="lastName"  formControlName="lastName" placeholder="Soyisim" required>
+    <input type="text" class="form-control btn-radius" name="lastName" formControlName="lastName" placeholder="Soyisim"
+      required>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('lastName').hasError('required') && registerForm.get('lastName').touched">
+      *Soyisim alanı zorunlu.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('lastName').hasError('maxlength') && registerForm.get('lastName').touched">
+      *50 karakterden fazla olamaz.
+    </span>
   </div>
 
   <div class="form-group">
-    <input type="text" class="form-control btn-radius"  name="nickName" (change)="checkNickName($event.target.value)" placeholder="Kullanıcı Adı" required>
+    <input type="text" class="form-control btn-radius" name="nickName" (keyup)="checkNickName($event.target.value)"
+      placeholder="Kullanıcı Adı" required>
+    <span *ngIf="nickNameValidationMessage" style="color: red;" class="pull-left">{{nickNameValidationMessage}}</span>
   </div>
 
   <div class="form-group">
-    <input type="email" formControlName="email" name="email" class="form-control btn-radius" placeholder="Email Adresi" required>
+    <input type="email" formControlName="email" name="email" class="form-control btn-radius" placeholder="Email Adresi"
+      required>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('email').hasError('required') && registerForm.get('email').touched">
+      *Email alanı zorunlu.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('email').hasError('maxlength') && registerForm.get('email').touched">
+      *60 karakterden fazla olamaz.
+    </span>
   </div>
 
   <hr>
 
   <div class="form-group">
-    <input type="password" formControlName="password" name="password"  class="form-control btn-radius" placeholder="Şifre" required>
+    <input type="password" formControlName="password" name="password" class="form-control btn-radius"
+      placeholder="Şifre" required>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">
+      *Şifre alanı zorunlu.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('password').hasError('maxlength') && registerForm.get('password').touched">
+      *20 karakterden fazla olamaz.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('password').hasError('minlength') && registerForm.get('password').touched">
+      *4 karakterden az olamaz.
+    </span>
+    <span style="color: red;" class="pull-left"
+      *ngIf="registerForm.get('password').hasError('email') && registerForm.get('password').touched">
+      *Lütfen geçerli bir email adresi giriniz..
+    </span>
   </div>
 
   <div class="form-group">
-    <input type="password" formControlName="confirmPassword" name="confirmPassword"  class="form-control btn-radius" placeholder="Şifre Tekrar"
-      required>
+    <input type="password" formControlName="confirmPassword" name="confirmPassword" class="form-control btn-radius"
+      placeholder="Şifre Tekrar" required>
+    <span style="color: red;" class="pull-left" *ngIf="registerForm.errors?.matchingFields">
+      *Şifreler uyumlu değil!
+    </span>
   </div>
 
-  <button class="btn btn-lg btn-primary btn-block text-uppercase" [disabled]="!registerForm.valid" type="submit">Üye Ol</button>
+  <button class="btn btn-lg btn-primary btn-block text-uppercase" [disabled]="!registerForm.valid" type="submit">Üye
+    Ol</button>
   <a class="d-block text-center mt-2 small" routerLink='/auth/login'>Giriş Yap</a>
 </form>

@@ -13,7 +13,8 @@ export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
   registerUser: any = {};
-  nickNameModel:any;
+  nickNameModel: any;
+  nickNameValidationMessage: string;
 
   constructor(
     private fb: FormBuilder,
@@ -28,12 +29,12 @@ export class RegisterComponent implements OnInit {
 
   createRegisterForm() {
     this.registerForm = this.fb.group({
-      email: new FormControl(null, [Validators.required, Validators.maxLength(60)]),
+      email: new FormControl(null, [Validators.required, Validators.maxLength(60), Validators.email]),
       password: new FormControl("", [Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
       confirmPassword: new FormControl("", Validators.required),
       firstName: new FormControl("", [Validators.required, Validators.maxLength(50)]),
       lastName: new FormControl("", [Validators.required, Validators.maxLength(50)]),
-      nickName: new FormControl("", [Validators.required, Validators.maxLength(20)])
+      nickName: new FormControl("", [Validators.required, Validators.maxLength(40)])
     }, { validator: this.matchingFields('password', 'confirmPassword') }
     )
   }
@@ -68,11 +69,13 @@ export class RegisterComponent implements OnInit {
           this.registerForm.patchValue({
             nickName: nickName
           })
+          this.nickNameValidationMessage = null;
         },
-        err=>{
+        err => {
           this.registerForm.patchValue({
             nickName: null
           })
+          this.nickNameValidationMessage = '*Bu kullanıcı adını başka bir kişi kullanmaktadır.'
         }
       )
   }
