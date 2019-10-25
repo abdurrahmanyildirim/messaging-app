@@ -7,10 +7,7 @@ export class AlertifyService {
     constructor() { }
 
     alert(message: string) {
-        alertify
-            .alert(message, function () {
-                alertify.message('OK');
-            }).setHeader('<b>Uyarı Mesajı</b> '); ;
+        alertify.alert('Uyarı Mesajı', message)
     }
 
     success(message: string) {

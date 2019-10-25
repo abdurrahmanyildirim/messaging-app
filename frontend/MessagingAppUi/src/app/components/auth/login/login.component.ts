@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
 
   createLoginForm() {
     this.loginForm = this.fb.group({
-      email: new FormControl(null, [Validators.required, Validators.email]),
+      email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
     })
   }
@@ -37,13 +37,12 @@ export class LoginComponent implements OnInit {
       this.loginUser = Object.assign({}, this.loginForm.value);
       this.authService.login(this.loginUser).subscribe(
         data => {
-          this.authService.saveToken(data);
+          this.authService.saveToken(data.token);
           this.alertifyService.success("Giriş yapıldı.")
           this.router.navigateByUrl('/countries');
         },
         err => {
-          console.log(err.message);
-          this.alertifyService.error(err.message);
+          this.alertifyService.alert("Hatalı giriş! Lütfen tekrar deneyiniz.");
           this.loginForm.reset();
         }
       )

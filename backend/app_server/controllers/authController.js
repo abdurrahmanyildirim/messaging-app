@@ -10,7 +10,6 @@ module.exports.login = (req, res) => {
     } else {
         var reqEmail = req.body.email;
         var reqPassword = crypto.createHash('md5').update(req.body.password).digest("hex");
-        console.log(reqEmail + " - " + reqPassword)
 
         User.findOne({ email: reqEmail, password: reqPassword }, (err, data) => {
             if (err) {
@@ -46,7 +45,6 @@ module.exports.register = (req, res) => {
         var userData = req.body;
 
         var reqUser = new User(userData);
-        console.log(reqUser);
 
         User.find({ email: reqUser.email, nickName: reqUser.nickName }, (err, data) => {
             if (err) {

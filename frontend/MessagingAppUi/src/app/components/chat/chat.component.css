@@ -6,15 +6,50 @@
   }
 
   .card-signin .card-body{
-      height: 450px;
-      padding: 0;
+    height: 450px;
+    padding: 0;
+    background-color: lightblue;
+  }
+  .card-signin .card-header{
+      padding: 2px 20px 2px 2px;
   }
 
-  .card-signin .card-body .btn-group{
-    width: 100%;
-    height: auto;
+.card-header .fas{
+    font-size: 40px;
 }
 
-.btn-group .fas{
-    font-size: 40px;
+.type_msg{
+    background-color: rgba(0,0,0,0.3) !important;
+    border:0 !important;
+    color:white !important;
+    height: 60px !important;
+    overflow-y: auto;
+}
+
+.type_msg:focus{
+    box-shadow:none !important;
+    outline:0px !important;
+}
+
+.send_btn{
+	background-color: rgba(0,0,0,0.3) !important;
+	border:0 !important;
+	color: white !important;
+	cursor: pointer;
+}
+        
+.card-footer{
+    border-radius: 0 0 15px 15px !important;
+    border-top: 0 !important;
+    padding: 0;
+}
+
+.msg_card_body{
+    overflow-y: auto;
+}
+
+.contacts_body{
+    padding:  0.75rem 0 !important;
+    overflow-y: auto;
+    white-space: nowrap;
 }

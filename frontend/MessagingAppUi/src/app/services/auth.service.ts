@@ -52,7 +52,9 @@ export class AuthService {
   }
 
   loggedIn() {
-    return this.jwtHelper.isTokenExpired(this.TOKEN_KEY);
+    return localStorage.getItem(this.TOKEN_KEY) ? true : false;
+
+    // return this.jwtHelper.isTokenExpired(this.TOKEN_KEY);
   }
 
   get token() {
@@ -64,6 +66,6 @@ export class AuthService {
   }
 
   getCurrentAccountId() {
-    return this.jwtHelper.decodeToken(this.token).nameid
+    return this.jwtHelper.decodeToken(this.token)._id
   }
 }
