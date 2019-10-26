@@ -1,6 +1,7 @@
-<ul>
-  <li *ngFor="let user of activeUsers">
-    <p>{{user.fullName}}</p>
-    <small>{{user.nickName}}</small>
-  </li>
-</ul>
+<p *ngIf="!activeUsers">Loading data ...</p>
+<div *ngFor="let user of activeUsers">
+    <button class="btn btn-dark" style="width: 100%; border-radius: 0;">
+      <b>{{user.nickName}}</b></button>
+</div>
+
+

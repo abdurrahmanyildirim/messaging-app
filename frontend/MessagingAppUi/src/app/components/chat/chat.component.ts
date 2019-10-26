@@ -22,7 +22,6 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     this.addActiveUser(this.authService.getCurrentAccountId());
-    this.getActiveUsers();
   }
 
   message: string;
@@ -39,10 +38,10 @@ export class ChatComponent implements OnInit {
     this.socket.emit('add activeUser', id);
   }
 
-  getActiveUsers() {
-    this.socket.on("visitors", data => {
-      this.activeUsers = data;
-    })
-  }
+  // getActiveUsers() {
+  //   this.socket.on("visitors", data => {
+  //     this.activeUsers = data;
+  //   })
+  // }
 
 }

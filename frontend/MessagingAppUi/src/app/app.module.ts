@@ -1,9 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 //Services
 import { AlertifyService } from '../app/services/alertify.service';
 
 //Modules
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,7 +17,6 @@ import { AuthComponent } from './components/auth/auth.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { AuthGuard } from './guards/auth.guard';
-import { ActiveUserControl } from './guards/activeUserControl';
 import { PeopleComponent } from './components/chat/people/people.component';
 import { FriendComponent } from './components/chat/friend/friend.component';
 import { RoomComponent } from './components/chat/room/room.component';
@@ -46,8 +45,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: {u
   providers: [
     AlertifyService,
     AuthService,
-    AuthGuard,
-    ActiveUserControl
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

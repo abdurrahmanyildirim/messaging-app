@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Room } from 'src/app/models/room';
+import { Socket } from 'ng-socket-io';
+import { Observable } from 'rxjs';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-room',
@@ -7,9 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomComponent implements OnInit {
 
-  constructor() { }
+  rooms: Observable<Room[]>;
+
+  constructor(
+    private socket: Socket,
+    private messageService: MessageService
+  ) { }
 
   ngOnInit() {
+    this.getRooms();
+    this.setRoomArray();
   }
 
+  getRooms() {
+    this.socket.emit('rooms', null)
+
+  }
+
+  setRoomArray() {
+
+    this.socket.on('rooms', datas => {
+      console.log(datas);
+      this.rooms = datas;
+    })
+  }
 }

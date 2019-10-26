@@ -3,6 +3,7 @@ import { Socket } from 'ng-socket-io';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveUser } from 'src/app/models/activeUser';
 import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-people',
@@ -15,20 +16,27 @@ export class PeopleComponent implements OnInit {
 
   constructor(
     private socket: Socket,
-    private authService: AuthService
-  ) {
-    this.getActiveUsers();
-    console.log(this.activeUsers);
-  }
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-
+   
+      this.getActiveUsers();
+      this.setActiveUserArray();
+   
   }
 
   getActiveUsers() {
+    this.socket.emit("get activeUsers", null)
+  }
+
+  setActiveUserArray() {
     this.socket.on("visitors", data => {
       this.activeUsers = data;
     })
   }
+
+
 
 }

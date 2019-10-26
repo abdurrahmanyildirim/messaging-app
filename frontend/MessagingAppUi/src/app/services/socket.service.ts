@@ -3,6 +3,7 @@ import { Socket } from 'ng-socket-io';
 import { ActiveUser } from '../models/activeUser';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { Resolve } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -27,13 +28,11 @@ export class SocketService {
   // }
   // activeUsers: ActiveUser[];
   // getActiveUsers(): ActiveUser[] {
-  //   this.socket.on("visitors", data => {
+  //  this.socket.on("visitors", data => {
   //     this.activeUsers = data;
 
-  //   }).then((err)=>{
-  //     return this.activeUsers;
   //   })
-    
+
   // }
 
 

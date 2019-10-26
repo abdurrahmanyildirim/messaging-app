@@ -5,12 +5,12 @@ import { AuthComponent } from './components/auth/auth.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { AuthGuard } from './guards/auth.guard';
-import { ActiveUserControl } from './guards/activeUserControl';
 import { PeopleComponent } from './components/chat/people/people.component';
+import { RoomComponent } from './components/chat/room/room.component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: 'chat',pathMatch:'full'
+    path: '', redirectTo: 'chat', pathMatch: 'full'
   }
   ,
   {
@@ -24,11 +24,12 @@ const routes: Routes = [
     path: 'chat', component: ChatComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'people', component: PeopleComponent }
+      { path: 'people', component: PeopleComponent },
+      { path: 'rooms', component: RoomComponent }
     ]
   },
   {
-    path: '**', redirectTo:'chat', pathMatch:'full'
+    path: '**', redirectTo: 'chat', pathMatch: 'full'
   }
 ];
 

@@ -1,5 +1,6 @@
 var ActiveUser = require('../models/activeUser');
 var User = require('../models/user');
+var Room = require('../models/room');
 
 module.exports = (io) => {
 
@@ -9,6 +10,16 @@ module.exports = (io) => {
         let users = sockets.map(s => s.user);
         return users;
     };
+
+    const emitRooms = () => {
+        Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
+            if (err) {
+                console.log(err)
+            } else {
+                io.emit('rooms', data);
+            }
+        }).sort('-createdDate')
+    }
 
     const emitVisitors = () => {
         io.emit("visitors", getVisitors());
@@ -20,12 +31,16 @@ module.exports = (io) => {
             emitVisitors();
         });
 
+        socket.on('rooms', () => {
+            emitRooms();
+        })
+
         socket.on('add activeUser', (identity) => {
-            User.findOne({ _id: identity }, (err, data) => {
+            User.findOne({ _id: identity }, async (err, data) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    var activeUser = new ActiveUser({
+                    var activeUser = await new ActiveUser({
                         id: data._id,
                         fullName: (data.firstName + " " + data.lastName),
                         nickName: data.nickName
@@ -34,14 +49,10 @@ module.exports = (io) => {
                     emitVisitors();
                 }
             })
-        })
-
-        socket.on('chat message', function (msg) {
-            io.emit('chat message', msg);
         });
 
-        socket.on('message', (msg) => {
-            io.emit('message', msg);
+        socket.on('get activeUsers', function () {
+            emitVisitors();
         })
     });
 }
