@@ -7,6 +7,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { AuthGuard } from './guards/auth.guard';
 import { PeopleComponent } from './components/chat/people/people.component';
 import { RoomComponent } from './components/chat/room/room.component';
+import { FriendComponent } from './components/chat/friend/friend.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: 'people', component: PeopleComponent },
-      { path: 'rooms', component: RoomComponent }
+      { path: 'rooms', component: RoomComponent },
+      { path: 'friends', component: FriendComponent }
     ]
   },
   {
@@ -34,7 +36,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+   imports: [
+      RouterModule.forRoot(routes)
+   ],
+   exports: [
+      RouterModule
+   ],
+   declarations: [
+   ]
 })
 export class AppRoutingModule { }

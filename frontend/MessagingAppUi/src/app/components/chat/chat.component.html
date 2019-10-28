@@ -5,13 +5,16 @@
         <div class="card-header">
           <div class="row" style="padding: 0;">
             <div class="col-4">
-              <button type="button" class="btn btn-outline-info" ><i class="fas fa-user-edit"></i></button>
+              <button type="button" class="btn btn-outline-info" routerLinkActive='active' routerLink='friends'><i
+                  class="fas fa-user-edit"></i></button>
             </div>
             <div class="col-4">
-              <button type="button" class="btn btn-outline-info" routerLinkActive='active' routerLink='rooms'><i class="fas fa-project-diagram"></i></button>
+              <button type="button" class="btn btn-outline-info" routerLinkActive='active' routerLink='rooms'><i
+                  class="fas fa-project-diagram"></i></button>
             </div>
             <div class="col-4">
-              <button type="button" class="btn btn-outline-info" routerLinkActive='active' routerLink='people'><i class="fas fa-users"></i></button>
+              <button type="button" class="btn btn-outline-info" routerLinkActive='active' routerLink='people'><i
+                  class="fas fa-users"></i></button>
             </div>
           </div>
         </div>
@@ -22,7 +25,20 @@
     </span>
     <span class="col-6">
       <div class="card card-signin">
-        <div class="card-body msg_card_body">
+        <div class="card-body msg_card_body" style="padding-top: 3px;" #content  >
+          <!-- Room Messages -->
+          <span id="msg-body">
+              <div #messages *ngFor="let message of roomMessages">
+                  <div class="d-flex justify-content-start mb-4" >
+                    <div class="msg_container" >
+                      <b>{{message.fromNick}}</b><br>
+                      {{message.content}}
+                      <span class="msg_time">{{message.sendDate | date:'fullDate'}}</span>
+                    </div>
+                  </div>
+              </div>
+          </span>
+         
 
           <!-- Will fill messages -->
         </div>
@@ -31,8 +47,7 @@
             <textarea [(ngModel)]="message" name="" class="form-control type_msg"
               placeholder="Mesajınızı buraya yazınız..."></textarea>
             <div (click)="sendMessage()" class="input-group-append">
-              <span  class="input-group-text send_btn"><i
-                  class="fas fa-location-arrow"></i></span>
+              <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
             </div>
           </div>
         </div>

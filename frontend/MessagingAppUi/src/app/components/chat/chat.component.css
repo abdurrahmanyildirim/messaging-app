@@ -18,6 +18,11 @@
     font-size: 40px;
 }
 
+.card-header .btn{
+    border-radius: 40px;
+}
+
+
 .type_msg{
     background-color: rgba(0,0,0,0.3) !important;
     border:0 !important;
@@ -46,6 +51,25 @@
 
 .msg_card_body{
     overflow-y: auto;
+}
+
+.msg_container{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 10px;
+    border-radius: 5px 25px 25px 25px;
+    background-color: #24d81d;
+    padding: 10px;
+    position: relative;
+    word-break: break-all;
+}
+
+.msg_time{
+    position: absolute;
+    left: 0;
+    bottom: -15px;
+    color:black;
+    font-size: 10px;
 }
 
 .contacts_body{

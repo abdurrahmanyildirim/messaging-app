@@ -7,6 +7,7 @@ var roomSchema = new Schema({
     messages: [
         {
             from: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+            fromNick: { type: String, required: true },
             content: { type: String, require: true },
             sendDate: { type: Date, require: true }
         }
