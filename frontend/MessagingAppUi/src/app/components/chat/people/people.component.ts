@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class PeopleComponent implements OnInit {
 
   activeUsers: Observable<ActiveUser[]>;
-
+  currentId:string;
   constructor(
     private socket: Socket,
     private authService: AuthService,
@@ -21,13 +21,12 @@ export class PeopleComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-   
-      this.getActiveUsers();
-      this.setActiveUserArray();
-   
+    this.getActiveUsers();
+    this.setActiveUserArray();
   }
 
   getActiveUsers() {
+    this.currentId=this.authService.getCurrentAccountId();
     this.socket.emit("get activeUsers", null)
   }
 

@@ -20,7 +20,6 @@ import { AuthGuard } from './guards/auth.guard';
 import { PeopleComponent } from './components/chat/people/people.component';
 import { FriendComponent } from './components/chat/friend/friend.component';
 import { RoomComponent } from './components/chat/room/room.component';
-import { ScrollToBottomDirective } from './directives/scroll-to-bottom.directive';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { userid: 'asd' } };
 
@@ -33,8 +32,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
     ChatComponent,
     PeopleComponent,
     FriendComponent,
-    RoomComponent,
-    ScrollToBottomDirective
+    RoomComponent
   ],
   imports: [
     BrowserModule,

@@ -12,12 +12,15 @@ module.exports = (io) => {
         return users;
     };
 
-    const emitRooms = () => {
+    const emitRooms = (userId) => {
         Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
             if (err) {
                 console.log(err)
             } else {
-                io.emit('rooms', data);
+                io.emit('rooms', {
+                    rooms: data,
+                    userId: userId
+                });
             }
         }).sort('-createdDate')
     }
@@ -39,21 +42,50 @@ module.exports = (io) => {
                     friend.lastMesssageDate = item.contents[item.contents.length - 1].sendDate;
                     friends.push(friend);
                 })
-                io.emit('friends', friends.sort(friends.lastMesssageDate));
+                io.emit('friends', {
+                    friends: friends.sort(friends.lastMesssageDate),
+                    userId: id
+                });
             }
         })
+    }
+
+    const emitFriendMessages = (chosenUserId, userId) => {
+        Message
+            .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    var isFrom = data.from == userId ? true : false;
+                    var messages = data;
+                    messages.contents.forEach((item) => {
+                        if (!isFrom) {
+                            item.isFrom = !item.isFrom;
+                        }
+                    })
+                    io.emit('userMessages', {
+                        messages: messages.contents,
+                        userId: userId
+                    });
+                }
+            })
     }
 
     const emitVisitors = () => {
         io.emit("visitors", getVisitors());
     };
 
-    const emitRoomMessages = (roomId) => {
+    const emitRoomMessages = (roomId, userId) => {
         Room.findOne({ _id: roomId }, '-__v', (err, data) => {
             if (err) {
                 console.log(err)
             } else {
-                io.emit('roomMessages', data.messages)
+
+                io.emit('roomMessages',
+                    {
+                        messages: data.messages,
+                        userId: userId
+                    })
             }
         })
     }
@@ -64,16 +96,28 @@ module.exports = (io) => {
             emitVisitors();
         });
 
-        socket.on('roomMessages', (roomId) => {
-            emitRoomMessages(roomId);
+        socket.on('roomMessages', (roomId, userId) => {
+            emitRoomMessages(roomId, userId);
+        })
+
+        socket.on('userMessages', (chosenUserId, userId) => {
+            emitFriendMessages(chosenUserId, userId);
+        })
+
+        socket.on('message to user', () => {
+
+        })
+
+        socket.on('message to room', () => {
+            
         })
 
         socket.on('friends', (id) => {
             emitFriends(id);
         })
 
-        socket.on('rooms', () => {
-            emitRooms();
+        socket.on('rooms', (userId) => {
+            emitRooms(userId);
         })
 
         socket.on('add activeUser', (identity) => {

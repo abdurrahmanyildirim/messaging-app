@@ -9,6 +9,7 @@
     height: 450px;
     padding: 0;
     background-color: lightblue;
+    padding-top: 1px;
   }
   .card-signin .card-header{
       padding: 2px 20px 2px 2px;
@@ -19,7 +20,7 @@
 }
 
 .card-header .btn{
-    border-radius: 40px;
+    border-radius: 15px 15px 5px 5px;
 }
 
 
@@ -29,6 +30,7 @@
     color:white !important;
     height: 60px !important;
     overflow-y: auto;
+    border-top-left-radius: 0;
 }
 
 .type_msg:focus{
@@ -37,10 +39,11 @@
 }
 
 .send_btn{
-	background-color: rgba(0,0,0,0.3) !important;
+	background-color: rgba(10, 51, 163, 0.5) !important;
 	border:0 !important;
 	color: white !important;
-	cursor: pointer;
+    cursor: pointer;
+    border-top-right-radius: 0;
 }
         
 .card-footer{
@@ -53,13 +56,24 @@
     overflow-y: auto;
 }
 
-.msg_container{
+.msg_container_left{
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 10px;
+    margin-left: 5px;
     border-radius: 5px 25px 25px 25px;
     background-color: #24d81d;
-    padding: 10px;
+    padding: 8px;
+    position: relative;
+    word-break: break-all;
+}
+
+.msg_container_right{
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 5px;
+    border-radius: 25px 5px 25px 25px;
+    background-color: #24d81d;
+    padding: 8px;
     position: relative;
     word-break: break-all;
 }
@@ -67,6 +81,14 @@
 .msg_time{
     position: absolute;
     left: 0;
+    bottom: -15px;
+    color:black;
+    font-size: 10px;
+}
+
+.msg_time_send{
+    position: absolute;
+    right: 0;
     bottom: -15px;
     color:black;
     font-size: 10px;

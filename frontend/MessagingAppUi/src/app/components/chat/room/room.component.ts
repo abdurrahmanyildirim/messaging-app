@@ -4,6 +4,7 @@ import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs';
 import { MessageService } from 'src/app/services/message.service';
 import { ChatComponent } from '../chat.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-room',
@@ -16,8 +17,8 @@ export class RoomComponent implements OnInit {
 
   constructor(
     private socket: Socket,
-    private messageService: MessageService,
-    private chatComponent: ChatComponent
+    private chatComponent: ChatComponent,
+    private authService: AuthService
   ) {
     this.setRoomArray();
   }
@@ -27,12 +28,14 @@ export class RoomComponent implements OnInit {
   }
 
   getRooms() {
-    this.socket.emit('rooms', null)
+    this.socket.emit('rooms', this.authService.getCurrentAccountId())
   }
 
   setRoomArray() {
     this.socket.on('rooms', datas => {
-      this.rooms = datas;
+      if(datas.userId==this.authService.getCurrentAccountId()){
+        this.rooms = datas.rooms;
+      }
     })
   }
 

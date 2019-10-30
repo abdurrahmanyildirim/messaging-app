@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { Friend } from 'src/app/models/friend';
 import { AuthService } from 'src/app/services/auth.service';
+import { ChatComponent } from '../chat.component';
 
 @Component({
   selector: 'app-friend',
@@ -14,7 +15,8 @@ export class FriendComponent implements OnInit {
 
   constructor(
     private socket: Socket,
-    private authService:AuthService
+    private authService: AuthService,
+    private chatComponent: ChatComponent
   ) { }
 
   ngOnInit() {
@@ -28,9 +30,14 @@ export class FriendComponent implements OnInit {
 
   setFriends() {
     this.socket.on('friends', datas => {
-      console.log(datas);
-      this.friends = datas;
+      if (datas.userId == this.authService.getCurrentAccountId()) {
+        this.friends = datas.friends;
+      }
     })
+  }
+
+  sendUserId(userId) {
+    this.chatComponent.getChosenUserMessages(userId);
   }
 
 }

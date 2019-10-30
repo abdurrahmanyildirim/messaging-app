@@ -1,7 +1,7 @@
 <p *ngIf="!activeUsers">Loading data ...</p>
 <div *ngFor="let user of activeUsers">
-    <button class="btn btn-dark" style="width: 100%; border-radius: 0;">
+  <div *ngIf="currentId != user.id">
+    <button class="btn btn-dark" style="width: 100%; border-radius: 25px;">
       <b>{{user.nickName}}</b></button>
+  </div>
 </div>
-
-
