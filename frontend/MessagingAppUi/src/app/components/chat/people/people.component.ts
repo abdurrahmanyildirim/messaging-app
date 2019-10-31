@@ -3,7 +3,7 @@ import { Socket } from 'ng-socket-io';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveUser } from 'src/app/models/activeUser';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ChatComponent } from '../chat.component';
 
 @Component({
   selector: 'app-people',
@@ -13,11 +13,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class PeopleComponent implements OnInit {
 
   activeUsers: Observable<ActiveUser[]>;
-  currentId:string;
+  currentId: string;
   constructor(
     private socket: Socket,
     private authService: AuthService,
-    private activatedRoute: ActivatedRoute
+    private chatComponent: ChatComponent
   ) { }
 
   ngOnInit() {
@@ -26,7 +26,7 @@ export class PeopleComponent implements OnInit {
   }
 
   getActiveUsers() {
-    this.currentId=this.authService.getCurrentAccountId();
+    this.currentId = this.authService.getCurrentAccountId();
     this.socket.emit("get activeUsers", null)
   }
 
@@ -34,6 +34,10 @@ export class PeopleComponent implements OnInit {
     this.socket.on("visitors", data => {
       this.activeUsers = data;
     })
+  }
+
+  sendUserId(userId) {
+    this.chatComponent.getChosenUserMessages(userId);
   }
 
 

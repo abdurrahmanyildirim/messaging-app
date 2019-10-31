@@ -12,6 +12,104 @@ module.exports = (io) => {
         return users;
     };
 
+    let addRoomMessage = (receivedData) => {
+        Room.findOne({ _id: receivedData.targetRoomId }, '-__v', (err, data) => {
+            if (err) {
+                console.log(err)
+            } else {
+                User.findOne({ _id: receivedData.userId }, '-__v', (err, user) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    var message = {
+                        from: receivedData.userId,
+                        fromNick: user.nickName,
+                        content: receivedData.message,
+                        sendDate: Date.now()
+                    }
+                    data.messages.push(message);
+                    data.save((err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    })
+
+                })
+
+            }
+        }).then(() => {
+            io.emit('message to room', { targetId: receivedData.targetRoomId })
+        })
+
+    }
+
+    let addFriendMessage = (receivedData) => {
+        Message
+            .findOne(
+                {
+                    $or:
+                        [{ from: receivedData.sourceUserId, to: receivedData.targetUserId },
+                        { from: receivedData.targetUserId, to: receivedData.sourceUserId }]
+                },//iki kullanıcı arasında daha önce konuşma olduysa direkt eklenir.
+                (err, data) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+
+                        if (data) {
+                            var isFrom = data.from == receivedData.sourceUserId ? true : false;
+                            data.contents.push({
+                                content: receivedData.message,
+                                sendDate: Date.now(),
+                                isFrom: isFrom,
+                                isRead: false
+                            })
+                            data.save((error) => {
+                                if (error) {
+                                    console.log(error);
+                                }
+                            })
+                        } else {//Bu bloğa düştüyse ilk mesaj gönderilmemiş demektir. İlk veri oluşturulur.
+                            User.find({ $or: [{ _id: receivedData.sourceUserId }, { _id: receivedData.targetUserId }] }, (err, data) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    var fromNick;
+                                    var toNick;
+                                    data.forEach((item) => {
+                                        if (item._id == receivedData.sourceUserId) {
+                                            fromNick = item.nickName;
+                                        } else {
+                                            toNick = item.nickName;
+                                        }
+                                    })
+                                    var message = new Message({
+                                        from: receivedData.sourceUserId,
+                                        to: receivedData.targetUserId,
+                                        fromNick: fromNick,
+                                        toNick: toNick,
+                                        contents: {
+                                            content: data.message,
+                                            sendDate: Date.now(),
+                                            isFrom: true,
+                                            isRead: false
+                                        }
+                                    });
+
+                                    message.save((err) => {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    }
+                }).then(() => {
+                    io.emit('message to user', { targetId: receivedData.targetUserId, sourceId: receivedData.sourceUserId })
+                })
+    }
+
     const emitRooms = (userId) => {
         Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
             if (err) {
@@ -23,7 +121,7 @@ module.exports = (io) => {
                 });
             }
         }).sort('-createdDate')
-    }
+    };
 
     const emitFriends = (id) => {
         Message.find({ $or: [{ from: id }, { to: id }] }, '-__v', (err, data) => {
@@ -48,7 +146,7 @@ module.exports = (io) => {
                 });
             }
         })
-    }
+    };
 
     const emitFriendMessages = (chosenUserId, userId) => {
         Message
@@ -57,7 +155,7 @@ module.exports = (io) => {
                     console.log(err)
                 } else {
                     var isFrom = data.from == userId ? true : false;
-                    var messages = data;
+                    let messages = data;
                     messages.contents.forEach((item) => {
                         if (!isFrom) {
                             item.isFrom = !item.isFrom;
@@ -69,7 +167,7 @@ module.exports = (io) => {
                     });
                 }
             })
-    }
+    };
 
     const emitVisitors = () => {
         io.emit("visitors", getVisitors());
@@ -80,7 +178,6 @@ module.exports = (io) => {
             if (err) {
                 console.log(err)
             } else {
-
                 io.emit('roomMessages',
                     {
                         messages: data.messages,
@@ -88,7 +185,7 @@ module.exports = (io) => {
                     })
             }
         })
-    }
+    };
 
     io.on('connection', function (socket) {
 
@@ -104,12 +201,12 @@ module.exports = (io) => {
             emitFriendMessages(chosenUserId, userId);
         })
 
-        socket.on('message to user', () => {
-
+        socket.on('message to user', (data) => {
+            addFriendMessage(data)
         })
 
-        socket.on('message to room', () => {
-            
+        socket.on('message to room', (data) => {
+            addRoomMessage(data)
         })
 
         socket.on('friends', (id) => {

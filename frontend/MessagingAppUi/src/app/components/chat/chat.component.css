@@ -10,6 +10,7 @@
     padding: 0;
     background-color: lightblue;
     padding-top: 1px;
+    word-break: break-all;
   }
   .card-signin .card-header{
       padding: 2px 20px 2px 2px;
@@ -62,9 +63,12 @@
     margin-left: 5px;
     border-radius: 5px 25px 25px 25px;
     background-color: #24d81d;
-    padding: 8px;
+    padding-left: 8px;
+    padding-right: 6px;
+    padding-bottom: 4px;
     position: relative;
     word-break: break-all;
+    padding-top: -5px;
 }
 
 .msg_container_right{
@@ -73,28 +77,38 @@
     margin-right: 5px;
     border-radius: 25px 5px 25px 25px;
     background-color: #24d81d;
-    padding: 8px;
+    padding-left: 8px;
+    padding-right: 6px;
+    padding-bottom: 4px;
     position: relative;
     word-break: break-all;
+    padding-top: -5px;
 }
 
 .msg_time{
-    position: absolute;
-    left: 0;
-    bottom: -15px;
-    color:black;
     font-size: 10px;
-}
-
-.msg_time_send{
-    position: absolute;
-    right: 0;
-    bottom: -15px;
-    color:black;
-    font-size: 10px;
+    margin-top: -3px;
+    color: darkslategrey;
 }
 
 .contacts_body{
     overflow-y: auto;
     white-space: nowrap;
+}
+
+.log-out{
+    float: right;
+    margin-left: -13px;
+    margin-top: 10px;
+    background-color: white;
+    height: 40px;
+    width: 20px;
+    text-align: center;
+    padding:0;
+    transition:400ms;
+}
+
+.log-out:hover{
+    width: 80px;
+    transition: 500ms;
 }

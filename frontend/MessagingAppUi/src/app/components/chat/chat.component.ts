@@ -5,6 +5,7 @@ import { MessageRoom } from 'src/app/models/messageRoom';
 import { Observable } from 'rxjs';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { MessageUser } from 'src/app/models/messageUser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -25,17 +26,27 @@ export class ChatComponent implements OnInit, AfterViewInit {
   constructor(
     private socket: Socket,
     private authService: AuthService,
-    private alertifyService: AlertifyService
+    private alertifyService: AlertifyService,
+    private router:Router
   ) { }
 
   ngOnInit() {
     this.addActiveUser(this.authService.getCurrentAccountId());
-    this.setRoomMessages()
+    this.setRoomMessages();
     this.setUserMessages();
+    this.updateUserMessages();
+    this.updateRoomMessages();
   }
 
   ngAfterViewInit() {
     this.messages.changes.subscribe(this.scrollToBottom);
+  }
+
+  restValues() {
+    this.targetRoomId = '';
+    this.targetUserId = '';
+    this.roomMessages = null;
+    this.userMessages = null;
   }
 
   addActiveUser(id) {
@@ -56,25 +67,56 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.socket.emit('userMessages', chosenUserId, this.authService.getCurrentAccountId());
   }
 
+  sendRoomMessage() {
+    this.socket.emit('message to room',
+      {
+        targetRoomId: this.targetRoomId,
+        userId: this.authService.getCurrentAccountId(),
+        message: this.message
+      });
+  }
+
+  sendUserMessage() {
+    this.socket
+      .emit('message to user',
+        {
+          targetUserId: this.targetUserId,
+          sourceUserId: this.authService.getCurrentAccountId(),
+          message: this.message
+        });
+  }
+
   sendMessage() {
     if (this.message.length <= 0 || this.message == null) {
       this.alertifyService.alert('Boş mesaj gönderilemez!')
     } else if (this.targetRoomId != null) {
-      this.socket.emit('message to room',
-        {
-          targetRoomId: this.targetRoomId,
-          userId: this.authService.getCurrentAccountId(),
-          message: this.message
-        });
+      this.sendRoomMessage();
+      this.message = '';
     } else if (this.targetUserId != null) {
-      this.socket
-        .emit('message to user',
-          {
-            targetUserId: this.targetUserId,
-            sourceUserId: this.authService.getCurrentAccountId(),
-            message: this.message
-          });
+      this.sendUserMessage();
+      this.message = '';
     }
+  }
+
+
+  updateRoomMessages() {
+    this.socket.on('message to room', data => {
+      if (data.targetId == this.targetRoomId) {
+        this.getChosenRoomMessages(data.targetId);
+      }
+    })
+  }
+
+  updateUserMessages() {
+    this.socket.on('message to user', data => {
+      if (data.sourceId == this.authService.getCurrentAccountId()) {
+        this.getChosenUserMessages(data.targetId);
+      }
+
+      if (data.targetId == this.authService.getCurrentAccountId() && this.targetUserId == data.sourceId) {
+        this.getChosenUserMessages(data.sourceId);
+      }
+    })
   }
 
   setUserMessages() {
@@ -97,6 +139,11 @@ export class ChatComponent implements OnInit, AfterViewInit {
     try {
       this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
     } catch (err) { }
+  }
+
+  logOut(){
+    this.authService.logOut();
+    this.router.navigateByUrl('/auth/login')
   }
 
 }
