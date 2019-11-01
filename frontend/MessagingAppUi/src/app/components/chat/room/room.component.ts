@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Room } from 'src/app/models/room';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs';
-import { MessageService } from 'src/app/services/message.service';
 import { ChatComponent } from '../chat.component';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -33,9 +32,7 @@ export class RoomComponent implements OnInit {
 
   setRoomArray() {
     this.socket.on('rooms', datas => {
-      if(datas.userId==this.authService.getCurrentAccountId()){
-        this.rooms = datas.rooms;
-      }
+      this.rooms = datas.rooms;
     })
   }
 

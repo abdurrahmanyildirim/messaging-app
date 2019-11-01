@@ -11,6 +11,7 @@ module.exports = (io) => {
         let users = sockets.map(s => s.user);
         return users;
     };
+    const connectedUsers = {};
 
     let addRoomMessage = (receivedData) => {
         Room.findOne({ _id: receivedData.targetRoomId }, '-__v', (err, data) => {
@@ -110,17 +111,17 @@ module.exports = (io) => {
                 })
     }
 
-    const emitRooms = (userId) => {
-        Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
+    let emitRooms = async () => {
+        var rooms = await Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
             if (err) {
                 console.log(err)
-            } else {
-                io.emit('rooms', {
-                    rooms: data,
-                    userId: userId
-                });
             }
-        }).sort('-createdDate')
+        }).sort('-createdDate').then(() => {
+            return rooms;
+        })
+
+        // io.emit('rooms', { rooms: rooms, userId: userId });
+        //  return { rooms: rooms, userId: userId };
     };
 
     const emitFriends = (id) => {
@@ -128,6 +129,10 @@ module.exports = (io) => {
             if (err) {
                 console.log(err)
             } else {
+                // var receiveSocketId = getVisitors();
+                // console.log(io.sockets.sockets);
+                // console.log(getVisitors());
+                // // var name = 
                 var friend = new Object({
                     userId: Number,
                     nickName: String,
@@ -148,7 +153,7 @@ module.exports = (io) => {
         })
     };
 
-    const emitFriendMessages = (chosenUserId, userId) => {
+    const emitFriendMessages = async (chosenUserId, userId) => {
         Message
             .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
                 if (err) {
@@ -189,20 +194,127 @@ module.exports = (io) => {
 
     io.on('connection', function (socket) {
 
+        // socket.on('private_chat', function (to) {
+        //     to.to = '5db2b9174c639031144e50cf';
+        //     var message = 'Başarılı'
+        //     connectedUsers[to.to].emit('private_chat', { message: message })
+        // })
+
         socket.on('disconnect', function () {
             emitVisitors();
         });
 
+        //*
         socket.on('roomMessages', (roomId, userId) => {
-            emitRoomMessages(roomId, userId);
+            Room.findOne({ _id: roomId }, '-__v', (err, data) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    connectedUsers[userId].emit('roomMessages', {
+                        messages: data.messages
+                    })
+                }
+            })
         })
 
+        //*
         socket.on('userMessages', (chosenUserId, userId) => {
-            emitFriendMessages(chosenUserId, userId);
-        })
+            Message
+                .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var isFrom = data.from == userId ? true : false;
+                        let messages = data;
+                        messages.contents.forEach((item) => {
+                            if (!isFrom) {
+                                item.isFrom = !item.isFrom;
+                            }
+                        })
 
-        socket.on('message to user', (data) => {
-            addFriendMessage(data)
+                        connectedUsers[userId].emit('userMessages', {
+                            messages: messages.contents
+                        });
+                    }
+                })
+        })
+        //*
+        socket.on('message to user', (receivedData) => {
+            Message
+                .findOne(
+                    {
+                        $or:
+                            [{ from: receivedData.sourceUserId, to: receivedData.targetUserId },
+                            { from: receivedData.targetUserId, to: receivedData.sourceUserId }]
+                    },//iki kullanıcı arasında daha önce konuşma olduysa direkt eklenir.
+                    (err, data) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+
+                            if (data) {
+                                var isFrom = data.from == receivedData.sourceUserId ? true : false;
+                                data.contents.push({
+                                    content: receivedData.message,
+                                    sendDate: Date.now(),
+                                    isFrom: isFrom,
+                                    isRead: false
+                                })
+                                data.save((error) => {
+                                    if (error) {
+                                        console.log(error);
+                                    }
+                                })
+                            } else {//Bu bloğa düştüyse ilk mesaj gönderilmemiş demektir. İlk veri oluşturulur.
+                                User.find({ $or: [{ _id: receivedData.sourceUserId }, { _id: receivedData.targetUserId }] }, (err, data) => {
+                                    if (err) {
+                                        console.log(err);
+                                    } else {
+                                        var fromNick;
+                                        var toNick;
+                                        data.forEach((item) => {
+                                            if (item._id == receivedData.sourceUserId) {
+                                                fromNick = item.nickName;
+                                            } else {
+                                                toNick = item.nickName;
+                                            }
+                                        })
+                                        var message = new Message({
+                                            from: receivedData.sourceUserId,
+                                            to: receivedData.targetUserId,
+                                            fromNick: fromNick,
+                                            toNick: toNick,
+                                            contents: {
+                                                content: data.message,
+                                                sendDate: Date.now(),
+                                                isFrom: true,
+                                                isRead: false
+                                            }
+                                        });
+
+                                        message.save((err) => {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    }).then(() => {
+                        connectedUsers[receivedData.sourceUserId].emit('message to user', {
+                            sourceId: receivedData.sourceUserId,
+                            message: receivedData.message
+                        })
+                    }).then(() => {
+                        if (connectedUsers[receivedData.targetUserId]) {
+                            connectedUsers[receivedData.targetUserId].emit('message to user', {
+                                targetId: receivedData.targetUserId,
+                                sourceId: receivedData.sourceUserId,
+                                message: receivedData.message
+                            })
+                        }
+                    })
         })
 
         socket.on('message to room', (data) => {
@@ -213,8 +325,19 @@ module.exports = (io) => {
             emitFriends(id);
         })
 
+        //*
         socket.on('rooms', (userId) => {
-            emitRooms(userId);
+
+            Room.find({ isActive: true }, '-__v -messages -isActive', (err, data) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    connectedUsers[userId].emit('rooms',
+                        {
+                            rooms: data
+                        });
+                }
+            }).sort('-createdDate')
         })
 
         socket.on('add activeUser', (identity) => {
@@ -228,6 +351,7 @@ module.exports = (io) => {
                         nickName: data.nickName
                     });
                     socket.user = activeUser;
+                    connectedUsers[identity] = socket;
                     emitVisitors();
                 }
             })

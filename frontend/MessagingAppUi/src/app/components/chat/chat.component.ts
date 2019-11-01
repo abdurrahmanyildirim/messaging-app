@@ -27,46 +27,47 @@ export class ChatComponent implements OnInit, AfterViewInit {
     private socket: Socket,
     private authService: AuthService,
     private alertifyService: AlertifyService,
-    private router:Router
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.addActiveUser(this.authService.getCurrentAccountId());
+    this.receivedMessage();
     this.setRoomMessages();
     this.setUserMessages();
-    this.updateUserMessages();
+    // this.updateUserMessages();
     this.updateRoomMessages();
   }
-
+  //Tamam
   ngAfterViewInit() {
     this.messages.changes.subscribe(this.scrollToBottom);
   }
-
+  //Tamam
   restValues() {
     this.targetRoomId = '';
     this.targetUserId = '';
     this.roomMessages = null;
     this.userMessages = null;
   }
-
+  //Tamam
   addActiveUser(id) {
     this.socket.emit('add activeUser', id);
   }
-
+  //Tamam
   getChosenRoomMessages(roomId) {
     this.targetUserId = null;
     this.targetRoomId = roomId;
     this.userMessages = null;
     this.socket.emit('roomMessages', roomId, this.authService.getCurrentAccountId());
   }
-
+  //Tamam
   getChosenUserMessages(chosenUserId) {
     this.targetRoomId = null;
     this.targetUserId = chosenUserId;
     this.roomMessages = null;
     this.socket.emit('userMessages', chosenUserId, this.authService.getCurrentAccountId());
   }
-
+  //Todo:Oda mantığı öğrenilip yapılacak.
   sendRoomMessage() {
     this.socket.emit('message to room',
       {
@@ -75,7 +76,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
         message: this.message
       });
   }
-
+  //Tamam
   sendUserMessage() {
     this.socket
       .emit('message to user',
@@ -85,7 +86,32 @@ export class ChatComponent implements OnInit, AfterViewInit {
           message: this.message
         });
   }
+  //Tamam
+  receivedMessage() {
+    this.socket.on('message to user', data => {
+      var currentId = this.authService.getCurrentAccountId();
 
+      if (currentId == data.sourceId) {
+
+        var message: any = {
+          content: data.message,
+          sendDate: Date.now(),
+          isFrom: true
+        }
+        this.userMessages.push(message);
+      }
+
+      if (currentId == data.targetId) {
+        var message: any = {
+          content: data.message,
+          sendDate: Date.now(),
+          isFrom: false
+        }
+        this.userMessages.push(message);
+      }
+    })
+  }
+  //Tamam
   sendMessage() {
     if (this.message.length <= 0 || this.message == null) {
       this.alertifyService.alert('Boş mesaj gönderilemez!')
@@ -98,7 +124,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   updateRoomMessages() {
     this.socket.on('message to room', data => {
       if (data.targetId == this.targetRoomId) {
@@ -106,32 +131,16 @@ export class ChatComponent implements OnInit, AfterViewInit {
       }
     })
   }
-
-  updateUserMessages() {
-    this.socket.on('message to user', data => {
-      if (data.sourceId == this.authService.getCurrentAccountId()) {
-        this.getChosenUserMessages(data.targetId);
-      }
-
-      if (data.targetId == this.authService.getCurrentAccountId() && this.targetUserId == data.sourceId) {
-        this.getChosenUserMessages(data.sourceId);
-      }
-    })
-  }
-
+  //Tamam
   setUserMessages() {
     this.socket.on('userMessages', data => {
-      if (this.authService.getCurrentAccountId() == data.userId) {
-        this.userMessages = data.messages
-      }
+      this.userMessages = data.messages
     })
   }
 
   setRoomMessages() {
     this.socket.on('roomMessages', data => {
-      if (data.userId == this.authService.getCurrentAccountId()) {
-        this.roomMessages = data.messages;
-      }
+      this.roomMessages = data.messages;
     })
   }
 
@@ -141,7 +150,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
     } catch (err) { }
   }
 
-  logOut(){
+  logOut() {
     this.authService.logOut();
     this.router.navigateByUrl('/auth/login')
   }
