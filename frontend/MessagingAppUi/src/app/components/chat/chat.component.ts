@@ -17,7 +17,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   @ViewChildren('messages') messages: QueryList<any>;
   @ViewChild('content') content: ElementRef;
 
-  roomMessages: Observable<MessageRoom[]>;
+  roomMessages: Observable<MessageRoom>[];
   userMessages: Observable<MessageUser>[];
   targetRoomId: string;
   targetUserId: string;
@@ -33,41 +33,40 @@ export class ChatComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.addActiveUser(this.authService.getCurrentAccountId());
     this.receivedMessage();
+    this.receiveRoomMessage();
     this.setRoomMessages();
     this.setUserMessages();
-    // this.updateUserMessages();
-    this.updateRoomMessages();
   }
-  //Tamam
+  
   ngAfterViewInit() {
     this.messages.changes.subscribe(this.scrollToBottom);
   }
-  //Tamam
+  
   restValues() {
     this.targetRoomId = '';
     this.targetUserId = '';
     this.roomMessages = null;
     this.userMessages = null;
   }
-  //Tamam
+  
   addActiveUser(id) {
     this.socket.emit('add activeUser', id);
   }
-  //Tamam
+  
   getChosenRoomMessages(roomId) {
     this.targetUserId = null;
     this.targetRoomId = roomId;
     this.userMessages = null;
     this.socket.emit('roomMessages', roomId, this.authService.getCurrentAccountId());
   }
-  //Tamam
+  
   getChosenUserMessages(chosenUserId) {
     this.targetRoomId = null;
     this.targetUserId = chosenUserId;
     this.roomMessages = null;
     this.socket.emit('userMessages', chosenUserId, this.authService.getCurrentAccountId());
   }
-  //Todo:Oda mantığı öğrenilip yapılacak.
+
   sendRoomMessage() {
     this.socket.emit('message to room',
       {
@@ -76,7 +75,14 @@ export class ChatComponent implements OnInit, AfterViewInit {
         message: this.message
       });
   }
-  //Tamam
+
+  receiveRoomMessage() {
+    this.socket.on('message to room', data => {
+      console.log(data);
+      this.roomMessages.push(data)
+    })
+  }
+
   sendUserMessage() {
     this.socket
       .emit('message to user',
@@ -86,32 +92,40 @@ export class ChatComponent implements OnInit, AfterViewInit {
           message: this.message
         });
   }
-  //Tamam
+
   receivedMessage() {
     this.socket.on('message to user', data => {
       var currentId = this.authService.getCurrentAccountId();
-
-      if (currentId == data.sourceId) {
-
-        var message: any = {
-          content: data.message,
-          sendDate: Date.now(),
-          isFrom: true
-        }
-        this.userMessages.push(message);
+      var isFrom = currentId == data.sourceId ? true : false;
+      var message: any = {
+        content: data.message,
+        sendDate: Date.now(),
+        isFrom: isFrom
       }
 
-      if (currentId == data.targetId) {
-        var message: any = {
-          content: data.message,
-          sendDate: Date.now(),
-          isFrom: false
-        }
-        this.userMessages.push(message);
-      }
+      this.userMessages.push(message);
+
+      // if (currentId == data.sourceId) {
+
+      //   var message: any = {
+      //     content: data.message,
+      //     sendDate: Date.now(),
+      //     isFrom: true
+      //   }
+      //   this.userMessages.push(message);
+      // }
+
+      // if (currentId == data.targetId) {
+      //   var message: any = {
+      //     content: data.message,
+      //     sendDate: Date.now(),
+      //     isFrom: false
+      //   }
+      //   this.userMessages.push(message);
+      // }
     })
   }
-  //Tamam
+
   sendMessage() {
     if (this.message.length <= 0 || this.message == null) {
       this.alertifyService.alert('Boş mesaj gönderilemez!')
@@ -124,14 +138,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateRoomMessages() {
-    this.socket.on('message to room', data => {
-      if (data.targetId == this.targetRoomId) {
-        this.getChosenRoomMessages(data.targetId);
-      }
-    })
-  }
-  //Tamam
   setUserMessages() {
     this.socket.on('userMessages', data => {
       this.userMessages = data.messages

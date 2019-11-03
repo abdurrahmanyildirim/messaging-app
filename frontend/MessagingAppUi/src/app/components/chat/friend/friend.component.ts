@@ -30,9 +30,7 @@ export class FriendComponent implements OnInit {
 
   setFriends() {
     this.socket.on('friends', datas => {
-      if (datas.userId == this.authService.getCurrentAccountId()) {
-        this.friends = datas.friends;
-      }
+      this.friends = datas.friends;
     })
   }
 
