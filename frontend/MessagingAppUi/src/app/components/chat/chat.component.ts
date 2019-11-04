@@ -37,29 +37,35 @@ export class ChatComponent implements OnInit, AfterViewInit {
     this.setRoomMessages();
     this.setUserMessages();
   }
-  
+
   ngAfterViewInit() {
     this.messages.changes.subscribe(this.scrollToBottom);
   }
-  
+
   restValues() {
     this.targetRoomId = '';
     this.targetUserId = '';
     this.roomMessages = null;
     this.userMessages = null;
   }
-  
+
   addActiveUser(id) {
     this.socket.emit('add activeUser', id);
   }
-  
+
   getChosenRoomMessages(roomId) {
+    if (this.targetRoomId != null) {
+      this.socket.emit('leave room', this.targetRoomId);
+    }
+
+    this.socket.emit('join room', roomId);
+
     this.targetUserId = null;
     this.targetRoomId = roomId;
     this.userMessages = null;
     this.socket.emit('roomMessages', roomId, this.authService.getCurrentAccountId());
   }
-  
+
   getChosenUserMessages(chosenUserId) {
     this.targetRoomId = null;
     this.targetUserId = chosenUserId;
@@ -104,25 +110,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
       }
 
       this.userMessages.push(message);
-
-      // if (currentId == data.sourceId) {
-
-      //   var message: any = {
-      //     content: data.message,
-      //     sendDate: Date.now(),
-      //     isFrom: true
-      //   }
-      //   this.userMessages.push(message);
-      // }
-
-      // if (currentId == data.targetId) {
-      //   var message: any = {
-      //     content: data.message,
-      //     sendDate: Date.now(),
-      //     isFrom: false
-      //   }
-      //   this.userMessages.push(message);
-      // }
     })
   }
 
@@ -135,6 +122,8 @@ export class ChatComponent implements OnInit, AfterViewInit {
     } else if (this.targetUserId != null) {
       this.sendUserMessage();
       this.message = '';
+    } else {
+      this.alertifyService.alert('Bir mesaj hedefi seçiniz!');
     }
   }
 

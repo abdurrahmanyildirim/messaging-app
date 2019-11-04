@@ -2,6 +2,8 @@
 <div *ngFor="let user of activeUsers">
   <div *ngIf="currentId != user.id">
     <button (click)="sendUserId(user.id)" class="btn btn-dark" style="width: 100%; border-radius: 25px;">
-      <b>{{user.nickName}}</b></button>
+      <b>{{user.nickName}}</b>
+    </button>
+
   </div>
 </div>

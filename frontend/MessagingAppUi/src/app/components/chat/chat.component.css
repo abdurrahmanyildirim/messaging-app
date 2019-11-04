@@ -98,7 +98,7 @@
 
 .log-out{
     float: right;
-    margin-left: -13px;
+    margin-left: 0;
     margin-top: 10px;
     background-color: white;
     height: 40px;

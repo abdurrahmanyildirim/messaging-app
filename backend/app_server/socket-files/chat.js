@@ -37,7 +37,6 @@ module.exports = (io) => {
                     })
 
                     io.sockets.in(receivedData.targetRoomId).emit('message to room', message);
-
                 })
 
             }
@@ -50,7 +49,7 @@ module.exports = (io) => {
     };
 
     io.on('connection', function (socket) {
-        
+
         socket.on('disconnect', function () {
             emitVisitors();
         });
@@ -79,28 +78,34 @@ module.exports = (io) => {
             })
         })
 
-        
         socket.on('userMessages', (chosenUserId, userId) => {
             Message
                 .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
                     if (err) {
                         console.log(err)
                     } else {
-                        var isFrom = data.from == userId ? true : false;
-                        let messages = data;
-                        messages.contents.forEach((item) => {
-                            if (!isFrom) {
-                                item.isFrom = !item.isFrom;
-                            }
-                        })
+                        if (data) {
+                            var isFrom = data.from == userId ? true : false;
+                            let messages = data;
+                            messages.contents.forEach((item) => {
+                                if (!isFrom) {
+                                    item.isFrom = !item.isFrom;
+                                }
+                            })
 
-                        connectedUsers[userId].emit('userMessages', {
-                            messages: messages.contents
-                        });
+                            connectedUsers[userId].emit('userMessages', {
+                                messages: messages.contents
+                            });
+                        } else {
+                            connectedUsers[userId].emit('userMessages', {
+                                messages: null
+                            });
+                        }
+
                     }
                 })
         })
-        
+
         socket.on('message to user', (receivedData) => {
             Message
                 .findOne(
@@ -147,7 +152,7 @@ module.exports = (io) => {
                                             fromNick: fromNick,
                                             toNick: toNick,
                                             contents: {
-                                                content: data.message,
+                                                content: receivedData.message,
                                                 sendDate: Date.now(),
                                                 isFrom: true,
                                                 isRead: false
@@ -184,20 +189,18 @@ module.exports = (io) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    var friend = new Object({
-                        userId: Number,
-                        nickName: String,
-                        lastMesssageDate: Date
-                    });
-                    var friends = []
+                    let friends = [];
                     data.forEach((item) => {
-                        friend.userId = item.from == id ? item.to : item.from;
-                        friend.nickName = item.from == id ? item.toNick : item.fromNick;
-                        friend.lastMesssageDate = item.contents[item.contents.length - 1].sendDate;
+                        var friend = {
+                            userId: item.from == id ? item.to : item.from,
+                            nickName: item.from == id ? item.toNick : item.fromNick,
+                            lastMesssageDate: item.contents[item.contents.length - 1].sendDate
+                        }
                         friends.push(friend);
                     })
+
                     connectedUsers[id].emit('friends', {
-                        friends: friends.sort(friends.lastMesssageDate)
+                        friends: friends.sort(friends.lastMesssageDate).reverse()
                     });
                 }
             })
@@ -216,7 +219,7 @@ module.exports = (io) => {
                 }
             }).sort('-createdDate')
         })
-        
+
         socket.on('add activeUser', (identity) => {
             User.findOne({ _id: identity }, async (err, data) => {
                 if (err) {
@@ -233,7 +236,7 @@ module.exports = (io) => {
                 }
             })
         });
-        
+
         socket.on('get activeUsers', function () {
             emitVisitors();
         })
