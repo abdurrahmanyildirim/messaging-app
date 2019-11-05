@@ -108,8 +108,16 @@ export class ChatComponent implements OnInit, AfterViewInit {
         sendDate: Date.now(),
         isFrom: isFrom
       }
-
-      this.userMessages.push(message);
+      if (data.sourceId == currentId) {
+        console.log('source')
+        this.userMessages.push(message);
+      }
+      if (data.targetId == currentId && data.sourceId == this.targetUserId) {
+        this.userMessages.push(message);
+        this.socket.emit('change isRead', data.sourceId, currentId)
+      } else if (data.targetId == currentId) {
+        this.socket.emit('friends', currentId);
+      }
     })
   }
 
@@ -130,6 +138,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   setUserMessages() {
     this.socket.on('userMessages', data => {
       this.userMessages = data.messages
+      this.socket.emit('change isRead', this.targetUserId, this.authService.getCurrentAccountId())
     })
   }
 

@@ -1,6 +1,9 @@
 <div *ngFor="let friend of friends">
-  <button class="btn btn-primary" (click)="sendUserId(friend.userId)" style="width: 100%;border-radius: 25px;">
+  <button class="btn btn-outline-info" id="{{friend.userId}}" (click)="sendUserId(friend.userId)"
+    style="width: 100%;border-radius: 25px;">
     <b>{{friend.nickName}} </b>
-    <span class="badge badge-light"> 5</span>
+    <i *ngIf="friend.nonReadMessageCount>0">
+      <span class="badge badge-danger" id="{{friend.userId}}-badge">{{friend.nonReadMessageCount}}</span>
+    </i>
   </button>
 </div>

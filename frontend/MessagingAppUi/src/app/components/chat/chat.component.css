@@ -20,11 +20,6 @@
     font-size: 40px;
 }
 
-.card-header .btn{
-    border-radius: 15px 15px 5px 5px;
-}
-
-
 .type_msg{
     background-color: rgba(0,0,0,0.3) !important;
     border:0 !important;

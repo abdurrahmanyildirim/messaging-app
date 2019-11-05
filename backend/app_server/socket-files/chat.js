@@ -9,6 +9,7 @@ module.exports = (io) => {
         let clients = io.sockets.clients().connected;
         let sockets = Object.values(clients);
         let users = sockets.map(s => s.user);
+
         return users;
     };
 
@@ -78,6 +79,24 @@ module.exports = (io) => {
             })
         })
 
+        socket.on('change isRead', async (chosenUserId, userId) => {
+            var arr = await Message
+                .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] });
+
+            var isFrom = arr.from == userId ? true : false;
+            arr.contents.forEach(item => {
+                if (isFrom != item.isFrom) {
+                    item.isRead = true;
+                }
+            })
+
+            arr.save((err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        })
+
         socket.on('userMessages', (chosenUserId, userId) => {
             Message
                 .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
@@ -87,11 +106,13 @@ module.exports = (io) => {
                         if (data) {
                             var isFrom = data.from == userId ? true : false;
                             let messages = data;
+
                             messages.contents.forEach((item) => {
                                 if (!isFrom) {
                                     item.isFrom = !item.isFrom;
                                 }
                             })
+
 
                             connectedUsers[userId].emit('userMessages', {
                                 messages: messages.contents
@@ -193,14 +214,23 @@ module.exports = (io) => {
                     data.forEach((item) => {
                         var friend = {
                             userId: item.from == id ? item.to : item.from,
-                            nickName: item.from == id ? item.toNick : item.fromNick,
-                            lastMesssageDate: item.contents[item.contents.length - 1].sendDate
+                            nickName: item.from == id ? item.toNick : item.fromNick
                         }
+                        var isFrom = item.from == id ? false : true;
+                        let nonReadMessage = 0;
+                        item.contents.forEach(element => {
+                            if (element.isFrom == isFrom && element.isRead == false) {
+                                nonReadMessage++;
+                            }
+                            friend.lastMesssageDate = element.sendDate
+                        });
+                        friend.nonReadMessageCount = nonReadMessage;
+
                         friends.push(friend);
                     })
 
                     connectedUsers[id].emit('friends', {
-                        friends: friends.sort(friends.lastMesssageDate).reverse()
+                        friends: friends
                     });
                 }
             })

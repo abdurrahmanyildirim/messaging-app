@@ -6,15 +6,16 @@
           <div class="row" style="padding: 0;">
             <div class="col-4">
               <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-                routerLink='friends'><i class="fas fa-user-edit"></i></button>
+                routerLink='friends' style="border-radius: 15px 3px 3px 3px;"><i class="fas fa-user-edit"></i></button>
             </div>
             <div class="col-4">
               <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-                routerLink='rooms'><i class="fas fa-project-diagram"></i></button>
+                routerLink='rooms' style="border-radius: 3px 3px 3px 3px;">
+                <i class="fas fa-project-diagram"></i></button>
             </div>
             <div class="col-4">
               <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-                routerLink='people'><i class="fas fa-users"></i></button>
+                routerLink='people' style="border-radius: 3px 15px 3px 3px;"><i class="fas fa-users"></i></button>
             </div>
           </div>
         </div>
@@ -30,46 +31,47 @@
             <div *ngIf="userMessages; else roomMessageContent">
               <div *ngFor="let message of userMessages">
                 <div class="d-flex mb-3"
-                  [ngClass]="{'justify-content-start':message.isFrom==false,'justify-content-end':message.isFrom==true}">
-                  <div
-                    [ngClass]="{'msg_container_left':message.isFrom==false,'msg_container_right':message.isFrom==true}">
-                    {{message.content}}
-                    <br>
-                    <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
-                  </div>
+                  [ngClass]="{'
+                justify-content-start':message.isFrom==false,'justify-content-end':message.isFrom==true}">
+                <div
+                  [ngClass]="{'msg_container_left':message.isFrom==false,'msg_container_right':message.isFrom==true}">
+                  {{message.content}}
+                  <br>
+                  <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
                 </div>
-              </div>
-            </div>
-            <!-- Room Messages -->
-            <ng-template #roomMessageContent>
-              <div *ngFor="let message of roomMessages">
-                <div class="d-flex justify-content-start mb-2">
-                  <div class="msg_container_left">
-                    <strong>{{message.fromNick}} : </strong>
-                    {{message.content}}
-                    <br>
-                    <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-
-          </span>
-        </div>
-        <div class="card-footer">
-          <div class="input-group">
-            <textarea [(ngModel)]="message" name="" class="form-control type_msg"
-              placeholder="Mesajınızı buraya yazınız..."></textarea>
-            <div (click)="sendMessage()" class="input-group-append">
-              <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
             </div>
           </div>
         </div>
-      </div>
+        <!-- Room Messages -->
+        <ng-template #roomMessageContent>
+          <div *ngFor="let message of roomMessages">
+            <div class="d-flex justify-content-start mb-2">
+              <div class="msg_container_left">
+                <strong>{{message.fromNick}} : </strong>
+                {{message.content}}
+                <br>
+                <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+
     </span>
-    <button (click)="logOut()" class="btn log-out">
-      <i class="fas fa-sign-out-alt"></i>
-    </button>
-    <!-- <input type="button" value="Çıkış" class="btn log-out"> -->
   </div>
+  <div class="card-footer">
+    <div class="input-group">
+      <textarea [(ngModel)]="message" name="" class="form-control type_msg"
+        placeholder="Mesajınızı buraya yazınız..."></textarea>
+      <div (click)="sendMessage()" class="input-group-append">
+        <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+</span>
+<button (click)="logOut()" class="btn log-out">
+  <i class="fas fa-sign-out-alt"></i>
+</button>
+<!-- <input type="button" value="Çıkış" class="btn log-out"> -->
+</div>
 </div>

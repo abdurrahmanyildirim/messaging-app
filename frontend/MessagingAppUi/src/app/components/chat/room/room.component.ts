@@ -4,6 +4,7 @@ import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs';
 import { ChatComponent } from '../chat.component';
 import { AuthService } from 'src/app/services/auth.service';
+declare var $: any;
 
 @Component({
   selector: 'app-room',
@@ -36,6 +37,8 @@ export class RoomComponent implements OnInit {
   }
 
   getChosenRoomMessages(roomId) {
+    $('.btn').removeClass('active')
+    $('#' + roomId).addClass('active')
     this.chatComponent.getChosenRoomMessages(roomId);
   }
 }
