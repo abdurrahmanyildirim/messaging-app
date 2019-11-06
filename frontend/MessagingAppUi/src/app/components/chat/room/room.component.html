@@ -1,5 +1,5 @@
 <div *ngFor="let room of rooms">
-  <button class="btn btn-outline-info" routerLinkActive='active' (click)="getChosenRoomMessages(room._id)"
+  <button class="btn btn-outline-info btn-rooms" (click)="getChosenRoomMessages(room._id)"
     style="width: 100%;border-radius: 25px;" id="{{room._id}}">
     <b>{{room.roomName}}</b></button>
 </div>

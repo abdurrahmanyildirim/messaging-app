@@ -57,10 +57,12 @@ module.exports = (io) => {
 
         socket.on('join room', (roomId) => {
             socket.join(roomId)
+            socket.broadcast.in(roomId).emit('user joined to room', socket.user.nickName);
         })
 
         socket.on('leave room', (roomId) => {
             socket.leave(roomId)
+            socket.in(roomId).emit('user left from room', socket.user.nickName);
         })
 
         socket.on('message to room', (receivedData) => {

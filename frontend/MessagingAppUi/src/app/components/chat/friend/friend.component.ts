@@ -37,7 +37,7 @@ export class FriendComponent implements OnInit {
 
   sendUserId(userId) {
     $('#' + userId + '-badge').html('');
-    $('.btn').removeClass('active')
+    $('.btn-friends').removeClass('active')
     $('#' + userId).addClass('active')
     this.chatComponent.getChosenUserMessages(userId);
   }

@@ -1,5 +1,5 @@
 <div *ngFor="let friend of friends">
-  <button class="btn btn-outline-info" id="{{friend.userId}}" (click)="sendUserId(friend.userId)"
+  <button class="btn btn-outline-info btn-friends" id="{{friend.userId}}" (click)="sendUserId(friend.userId)"
     style="width: 100%;border-radius: 25px;">
     <b>{{friend.nickName}} </b>
     <i *ngIf="friend.nonReadMessageCount>0">
