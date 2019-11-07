@@ -86,12 +86,17 @@ module.exports = (io) => {
                 .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] });
 
             var isFrom = arr.from == userId ? true : false;
-            arr.contents.forEach(item => {
-                if (isFrom != item.isFrom) {
-                    item.isRead = true;
-                }
+            //False olan mesaj sayısının bulunması için filter yapıyoruz.
+            let messages = arr.contents.filter((item) => {
+                return item.isRead === false;
             })
 
+            var nonMessageCount = messages.length;
+            for (let i = arr.contents.length - 1; i >= arr.contents.length - nonMessageCount; i--) {
+                if (isFrom != arr.contents[i].isFrom) {
+                    arr.contents[i].isRead = true;
+                }
+            }
             arr.save((err) => {
                 if (err) {
                     console.log(err);
