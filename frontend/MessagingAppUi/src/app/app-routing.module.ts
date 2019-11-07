@@ -8,6 +8,10 @@ import { AuthGuard } from './guards/auth.guard';
 import { PeopleComponent } from './components/chat/people/people.component';
 import { RoomComponent } from './components/chat/room/room.component';
 import { FriendComponent } from './components/chat/friend/friend.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { RoomSettingComponent } from './components/admin-panel/room-setting/room-setting.component';
+import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   {
@@ -31,18 +35,26 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'admin-panel', component: AdminPanelComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    children: [
+      { path: 'room-setting', component: RoomSettingComponent },
+      { path: 'user-setting', component: UserSettingComponent }
+    ]
+  },
+  {
     path: '**', redirectTo: 'chat', pathMatch: 'full'
   }
 ];
 
 @NgModule({
-   imports: [
-      RouterModule.forRoot(routes)
-   ],
-   exports: [
-      RouterModule
-   ],
-   declarations: [
-   ]
+  imports: [
+    RouterModule.forRoot(routes)
+  ],
+  exports: [
+    RouterModule
+  ],
+  declarations: [
+  ]
 })
 export class AppRoutingModule { }

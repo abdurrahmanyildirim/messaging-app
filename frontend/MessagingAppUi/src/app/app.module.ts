@@ -20,6 +20,10 @@ import { AuthGuard } from './guards/auth.guard';
 import { PeopleComponent } from './components/chat/people/people.component';
 import { FriendComponent } from './components/chat/friend/friend.component';
 import { RoomComponent } from './components/chat/room/room.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { RoomSettingComponent } from './components/admin-panel/room-setting/room-setting.component';
+import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
+import { RoleGuard } from './guards/role.guard';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { userid: 'asd' } };
 
@@ -32,7 +36,10 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
     ChatComponent,
     PeopleComponent,
     FriendComponent,
-    RoomComponent
+    RoomComponent,
+    AdminPanelComponent,
+    RoomSettingComponent,
+    UserSettingComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +52,8 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
   providers: [
     AlertifyService,
     AuthService,
-    AuthGuard
+    AuthGuard,
+    RoleGuard
   ],
   bootstrap: [AppComponent]
 })

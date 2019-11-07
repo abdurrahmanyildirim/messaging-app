@@ -31,6 +31,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit() {
+    this.getRole();
     this.addActiveUser(this.authService.getCurrentAccountId());
     this.receivedMessage();
     this.receiveRoomMessage();
@@ -40,6 +41,14 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.messages.changes.subscribe(this.scrollToBottom);
+  }
+
+  getRole() {
+    if (this.authService.getCurrentAccountRole() == 'Admin') {
+      return true
+    } else {
+      return false;
+    }
   }
 
   restValues() {

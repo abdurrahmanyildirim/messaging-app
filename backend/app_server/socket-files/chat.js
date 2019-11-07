@@ -115,7 +115,6 @@ module.exports = (io) => {
                                 }
                             })
 
-
                             connectedUsers[userId].emit('userMessages', {
                                 messages: messages.contents
                             });
@@ -146,7 +145,6 @@ module.exports = (io) => {
                                 var isFrom = data.from == receivedData.sourceUserId ? true : false;
                                 data.contents.push({
                                     content: receivedData.message,
-                                    sendDate: Date.now(),
                                     isFrom: isFrom,
                                     isRead: false
                                 })
@@ -176,7 +174,6 @@ module.exports = (io) => {
                                             toNick: toNick,
                                             contents: {
                                                 content: receivedData.message,
-                                                sendDate: Date.now(),
                                                 isFrom: true,
                                                 isRead: false
                                             }

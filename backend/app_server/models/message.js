@@ -9,8 +9,8 @@ var messageSchema = new Schema({
     toNick: { type: String, required: true },
     contents: [
         {
-            content: { type: String, required: true },
-            sendDate: { type: Date, required: true },
+            content: { type: String, required: true, trim: true },
+            sendDate: { type: Date, required: true, default: Date.now() },
             isFrom: { type: Boolean, require: true },
             isRead: { type: Boolean, required: true }
         }]
