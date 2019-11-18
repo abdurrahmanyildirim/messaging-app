@@ -1,5 +1,5 @@
 export class Friend {
-    userId: Number;
+    userId: number;
     nickName: string;
-    lastMesssageDate: Date
+    lastMesssageDate: Date;
 }

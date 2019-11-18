@@ -14,10 +14,10 @@ export class SettingService {
     private http: HttpClient
   ) { }
 
-  baseUrl: string = environment.path + "setting/";
+  baseUrl: string = environment.path + 'setting/';
 
   addRoom(room: Room) {
-    return this.http.post(this.baseUrl + '/create-room', room)
+    return this.http.post(this.baseUrl + '/create-room', room);
   }
 
   getRooms(): Observable<Room[]> {
@@ -25,7 +25,7 @@ export class SettingService {
   }
 
   deleteRoom(roomdId) {
-    return this.http.get(this.baseUrl + 'delete-room/' + roomdId)
+    return this.http.get(this.baseUrl + 'delete-room/' + roomdId);
   }
 
   getUsers(): Observable<User[]> {

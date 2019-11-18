@@ -21,7 +21,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   userMessages: Observable<MessageUser>[];
   targetRoomId: string;
   targetUserId: string;
-  message: string = '';
+  message = '';
 
   constructor(
     private socket: Socket,
@@ -44,8 +44,8 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   getRole() {
-    if (this.authService.getCurrentAccountRole() == 'Admin') {
-      return true
+    if (this.authService.getCurrentAccountRole() === 'Admin') {
+      return true;
     } else {
       return false;
     }
@@ -94,8 +94,8 @@ export class ChatComponent implements OnInit, AfterViewInit {
   receiveRoomMessage() {
     this.socket.on('message to room', data => {
       console.log(data);
-      this.roomMessages.push(data)
-    })
+      this.roomMessages.push(data);
+    });
   }
 
   sendUserMessage() {
@@ -110,29 +110,28 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   receivedMessage() {
     this.socket.on('message to user', data => {
-      var currentId = this.authService.getCurrentAccountId();
-      var isFrom = currentId == data.sourceId ? true : false;
-      var message: any = {
+      const currentId = this.authService.getCurrentAccountId();
+      const isFrom = currentId === data.sourceId ? true : false;
+      const message: any = {
         content: data.message,
         sendDate: Date.now(),
         isFrom: isFrom
-      }
-      if (data.sourceId == currentId) {
-        console.log('source')
+      };
+      if (data.sourceId === currentId) {
         this.userMessages.push(message);
       }
-      if (data.targetId == currentId && data.sourceId == this.targetUserId) {
+      if (data.targetId === currentId && data.sourceId === this.targetUserId) {
         this.userMessages.push(message);
-        this.socket.emit('change isRead', data.sourceId, currentId)
-      } else if (data.targetId == currentId) {
+        this.socket.emit('change isRead', data.sourceId, currentId);
+      } else if (data.targetId === currentId) {
         this.socket.emit('friends', currentId);
       }
-    })
+    });
   }
 
   sendMessage() {
     if (this.message.length <= 0 || this.message == null) {
-      this.alertifyService.alert('Boş mesaj gönderilemez!')
+      this.alertifyService.alert('Boş mesaj gönderilemez!');
     } else if (this.targetRoomId != null) {
       this.sendRoomMessage();
       this.message = '';
@@ -146,15 +145,15 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   setUserMessages() {
     this.socket.on('userMessages', data => {
-      this.userMessages = data.messages
-      this.socket.emit('change isRead', this.targetUserId, this.authService.getCurrentAccountId())
-    })
+      this.userMessages = data.messages;
+      this.socket.emit('change isRead', this.targetUserId, this.authService.getCurrentAccountId());
+    });
   }
 
   setRoomMessages() {
     this.socket.on('roomMessages', data => {
       this.roomMessages = data.messages;
-    })
+    });
   }
 
   scrollToBottom = () => {
@@ -165,7 +164,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   logOut() {
     this.authService.logOut();
-    this.router.navigateByUrl('/auth/login')
+    this.router.navigateByUrl('/auth/login');
   }
 
 }

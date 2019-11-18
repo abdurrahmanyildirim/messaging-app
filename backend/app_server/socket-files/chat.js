@@ -84,24 +84,27 @@ module.exports = (io) => {
         socket.on('change isRead', async (chosenUserId, userId) => {
             var arr = await Message
                 .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] });
+                
+            if (arr) {
+                var isFrom = arr.from == userId ? true : false;
+                //False olan mesaj sayısının bulunması için filter yapıyoruz.
+                let messages = arr.contents.filter((item) => {
+                    return item.isRead === false;
+                })
 
-            var isFrom = arr.from == userId ? true : false;
-            //False olan mesaj sayısının bulunması için filter yapıyoruz.
-            let messages = arr.contents.filter((item) => {
-                return item.isRead === false;
-            })
-
-            var nonMessageCount = messages.length;
-            for (let i = arr.contents.length - 1; i >= arr.contents.length - nonMessageCount; i--) {
-                if (isFrom != arr.contents[i].isFrom) {
-                    arr.contents[i].isRead = true;
+                var nonMessageCount = messages.length;
+                for (let i = arr.contents.length - 1; i >= arr.contents.length - nonMessageCount; i--) {
+                    if (isFrom != arr.contents[i].isFrom) {
+                        arr.contents[i].isRead = true;
+                    }
                 }
+                arr.save((err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
             }
-            arr.save((err) => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+
         })
 
         socket.on('userMessages', (chosenUserId, userId) => {

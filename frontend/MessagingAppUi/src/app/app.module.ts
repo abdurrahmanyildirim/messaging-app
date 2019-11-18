@@ -1,15 +1,15 @@
-//Services
+// Services
 import { AlertifyService } from '../app/services/alertify.service';
 
-//Modules
+// Modules
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SocketIoModule, SocketIoConfig } from 'ng-socket-io'
+import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 
-//Components
+// Components
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/auth/register/register.component';
 import { AuthService } from './services/auth.service';
@@ -24,6 +24,9 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
 import { RoomSettingComponent } from './components/admin-panel/room-setting/room-setting.component';
 import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
 import { RoleGuard } from './guards/role.guard';
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { userid: 'asd' } };
 
@@ -47,13 +50,16 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(socketConfig)
+    SocketIoModule.forRoot(socketConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
   ],
   providers: [
     AlertifyService,
     AuthService,
     AuthGuard,
-    RoleGuard
+    RoleGuard,
+
   ],
   bootstrap: [AppComponent]
 })

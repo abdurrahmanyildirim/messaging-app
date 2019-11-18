@@ -22,14 +22,14 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.createLoginForm()
+    this.createLoginForm();
   }
 
   createLoginForm() {
     this.loginForm = this.fb.group({
       email: new FormControl(null, [Validators.required]),
       password: new FormControl(null, [Validators.required]),
-    })
+    });
   }
 
   login() {
@@ -38,14 +38,14 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginUser).subscribe(
         data => {
           this.authService.saveToken(data.token);
-          this.alertifyService.success("Giriş yapıldı.")
+          this.alertifyService.success('Giriş yapıldı.');
           this.router.navigateByUrl('/countries');
         },
         err => {
-          this.alertifyService.alert("Hatalı giriş! Lütfen tekrar deneyiniz.");
+          this.alertifyService.alert('Hatalı giriş! Lütfen tekrar deneyiniz.');
           this.loginForm.reset();
         }
-      )
+      );
     }
   }
 

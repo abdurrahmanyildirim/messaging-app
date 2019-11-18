@@ -12,16 +12,15 @@ import { Observable } from 'rxjs';
 })
 export class RoomSettingComponent implements OnInit {
 
+  roomGroup: FormGroup;
+  room: any = {};
+  rooms: Observable<Room[]>;
 
   constructor(
     private fb: FormBuilder,
     private settingService: SettingService,
     private alertifyService: AlertifyService
   ) { }
-
-  roomGroup: FormGroup
-  room: any = {};
-  rooms: Observable<Room[]>;
 
   ngOnInit() {
     this.createRoomForm();
@@ -48,24 +47,24 @@ export class RoomSettingComponent implements OnInit {
           this.alertifyService.alert(err.message);
           this.roomGroup.reset();
         }
-      )
+      );
     }
   }
 
   getRooms() {
     this.settingService.getRooms().subscribe(data => {
       this.rooms = data as any;
-    })
+    });
   }
 
   deleteRoom(roomId) {
     this.settingService.deleteRoom(roomId).subscribe(data => {
-      this.alertifyService.success('Oda Silindi.')
+      this.alertifyService.success('Oda Silindi.');
       this.getRooms();
     },
       err => {
-        this.alertifyService.error('Bir hata meydana geldi.')
-      })
+        this.alertifyService.error('Bir hata meydana geldi.');
+      });
   }
 
 }

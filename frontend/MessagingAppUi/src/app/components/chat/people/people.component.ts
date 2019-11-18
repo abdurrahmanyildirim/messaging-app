@@ -27,13 +27,13 @@ export class PeopleComponent implements OnInit {
 
   getActiveUsers() {
     this.currentId = this.authService.getCurrentAccountId();
-    this.socket.emit("get activeUsers", null)
+    this.socket.emit('get activeUsers', null);
   }
 
   setActiveUserArray() {
-    this.socket.on("visitors", data => {
+    this.socket.on('visitors', data => {
       this.activeUsers = data;
-    })
+    });
   }
 
   sendUserId(userId) {

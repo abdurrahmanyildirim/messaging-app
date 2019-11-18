@@ -7,7 +7,7 @@ export class AlertifyService {
     constructor() { }
 
     alert(message: string) {
-        alertify.alert('Uyarı Mesajı', message)
+        alertify.alert('Uyarı Mesajı', message);
     }
 
     success(message: string) {

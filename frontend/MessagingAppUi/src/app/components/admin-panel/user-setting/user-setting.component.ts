@@ -22,7 +22,7 @@ export class UserSettingComponent implements OnInit {
   getUsers() {
     this.settingService.getUsers().subscribe(data => {
       this.users = data;
-    })
+    });
   }
 
 }

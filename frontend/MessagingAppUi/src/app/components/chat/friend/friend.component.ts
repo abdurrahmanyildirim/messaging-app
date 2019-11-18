@@ -30,15 +30,15 @@ export class FriendComponent implements OnInit {
 
   setFriends() {
     this.socket.on('friends', datas => {
-      let friends = datas.friends.sort((a, b) => new Date(b.lastMesssageDate).getTime() - new Date(a.lastMesssageDate).getTime());
+      const friends = datas.friends.sort((a, b) => new Date(b.lastMesssageDate).getTime() - new Date(a.lastMesssageDate).getTime());
       this.friends = friends;
-    })
+    });
   }
 
   sendUserId(userId) {
     $('#' + userId + '-badge').html('');
-    $('.btn-friends').removeClass('active')
-    $('#' + userId).addClass('active')
+    $('.btn-friends').removeClass('active');
+    $('#' + userId).addClass('active');
     this.chatComponent.getChosenUserMessages(userId);
   }
 

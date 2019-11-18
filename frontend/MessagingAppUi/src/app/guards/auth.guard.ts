@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CanActivate } from '@angular/router/src/utils/preactivation';
 import { AuthService } from '../services/auth.service';
@@ -13,18 +13,17 @@ export class AuthGuard implements CanActivate  {
   route: ActivatedRouteSnapshot;
 
   constructor(
-    private authService:AuthService,
-    private router:Router,
-    private alertifyService:AlertifyService
+    private authService: AuthService,
+    private router: Router,
+    private alertifyService: AlertifyService
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot) {
-      if(!this.authService.loggedIn()){
+  canActivate() {
+      if (!this.authService.loggedIn()) {
         this.router.navigateByUrl('/auth/login');
-        this.alertifyService.error("Sisteme giriş yapınız!")
+        this.alertifyService.error('Sisteme giriş yapınız!');
         return false;
-      }else{
+      } else {
         return true;
       }
   }
