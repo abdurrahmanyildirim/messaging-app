@@ -5,15 +5,13 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { AlertifyService } from './alertify.service';
 import { LoginUser } from '../models/loginUser';
 import { RegisterUser } from '../models/registerUser';
-import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private httpClient: HttpClient,
-    private alertifyService: AlertifyService,
-    private angularFireAuth: AngularFireAuth
+    private alertifyService: AlertifyService
   ) { }
 
   baseUrl: string = environment.path + 'auth/';
@@ -24,17 +22,17 @@ export class AuthService {
 
   }
 
-  registerWithFireBase(email: string, password: string) {
-    this.angularFireAuth
-      .auth
-      .createUserWithEmailAndPassword(email, password)
-      .then(res => {
-        console.log('Successfully signed up!', res);
-      })
-      .catch(error => {
-        console.log('Something is wrong:', error.message);
-      });
-  }
+  // registerWithFireBase(email: string, password: string) {
+  //   this.angularFireAuth
+  //     .auth
+  //     .createUserWithEmailAndPassword(email, password)
+  //     .then(res => {
+  //       console.log('Successfully signed up!', res);
+  //     })
+  //     .catch(error => {
+  //       console.log('Something is wrong:', error.message);
+  //     });
+  // }
 
   login(loginUser: LoginUser): any {
     let headers = new HttpHeaders();

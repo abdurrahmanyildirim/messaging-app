@@ -24,9 +24,6 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
 import { RoomSettingComponent } from './components/admin-panel/room-setting/room-setting.component';
 import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
 import { RoleGuard } from './guards/role.guard';
-import { environment } from 'src/environments/environment';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuthModule } from '@angular/fire/auth';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { userid: 'asd' } };
 
@@ -50,16 +47,13 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(socketConfig),
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
+    SocketIoModule.forRoot(socketConfig)
   ],
   providers: [
     AlertifyService,
     AuthService,
     AuthGuard,
     RoleGuard,
-
   ],
   bootstrap: [AppComponent]
 })
