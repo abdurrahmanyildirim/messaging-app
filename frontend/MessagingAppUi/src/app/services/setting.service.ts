@@ -5,16 +5,14 @@ import { Room } from '../models/room';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SettingService {
+
+  baseUrl: string = environment.path + 'setting/';
 
   constructor(
     private http: HttpClient
   ) { }
-
-  baseUrl: string = environment.path + 'setting/';
 
   addRoom(room: Room) {
     return this.http.post(this.baseUrl + '/create-room', room);

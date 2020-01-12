@@ -1,6 +1,6 @@
-var express = require('express')
-var router = express.Router();
-var settingController = require('../controllers/settingController');
+const express = require('express')
+const router = express.Router();
+const settingController = require('../controllers/settingController');
 
 router.post('/create-room', settingController.createRoom);
 router.get('/get-rooms', settingController.getRooms);

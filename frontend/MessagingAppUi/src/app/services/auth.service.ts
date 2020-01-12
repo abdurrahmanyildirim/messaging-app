@@ -9,30 +9,14 @@ import { RegisterUser } from '../models/registerUser';
 @Injectable()
 export class AuthService {
 
-  constructor(
-    private httpClient: HttpClient,
-    private alertifyService: AlertifyService
-  ) { }
-
   baseUrl: string = environment.path + 'auth/';
   jwtHelper: JwtHelperService = new JwtHelperService();
   TOKEN_KEY = 'token';
 
-  loginWithFireBase() {
-
-  }
-
-  // registerWithFireBase(email: string, password: string) {
-  //   this.angularFireAuth
-  //     .auth
-  //     .createUserWithEmailAndPassword(email, password)
-  //     .then(res => {
-  //       console.log('Successfully signed up!', res);
-  //     })
-  //     .catch(error => {
-  //       console.log('Something is wrong:', error.message);
-  //     });
-  // }
+  constructor(
+    private httpClient: HttpClient,
+    private alertifyService: AlertifyService
+  ) { }
 
   login(loginUser: LoginUser): any {
     let headers = new HttpHeaders();

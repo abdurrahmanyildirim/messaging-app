@@ -1,110 +1,127 @@
 .card-signin {
-    border: 0;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  .card-signin .card-body{
-    height: 450px;
-    padding: 0;
-    background-color: lightblue;
-    padding-top: 1px;
-    word-break: break-all;
-  }
-  .card-signin .card-header{
-      padding: 2px 20px 2px 2px;
-  }
-
-.card-header .fas{
-    font-size: 40px;
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex: 1;
 }
 
-.type_msg{
-    background-color: rgba(0,0,0,0.3) !important;
-    border:0 !important;
-    color:white !important;
-    height: 60px !important;
-    overflow-y: auto;
-    border-top-left-radius: 0;
+.card-signin .card-body {
+  height: 450px;
+  padding: 10px 3px 0px 3px;
+  background-color: lightblue;
+  padding-top: 1px;
+  word-break: break-all;
 }
 
-.type_msg:focus{
-    box-shadow:none !important;
-    outline:0px !important;
+.card-header .fas {
+  font-size: 40px;
 }
 
-.send_btn{
-	background-color: rgba(10, 51, 163, 0.5) !important;
-	border:0 !important;
-	color: white !important;
-    cursor: pointer;
-    border-top-right-radius: 0;
-}
-        
-.card-footer{
-    border-radius: 0 0 15px 15px !important;
-    border-top: 0 !important;
-    padding: 0;
+.type_msg {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+  border: 0 !important;
+  color: white !important;
+  height: 60px !important;
+  overflow-y: auto;
+  border-top-left-radius: 0;
 }
 
-.msg_card_body{
-    overflow-y: auto;
+.type_msg:focus {
+  box-shadow: none !important;
+  outline: 0px !important;
 }
 
-.msg_container_left{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-left: 5px;
-    border-radius: 5px 25px 25px 25px;
-    background-color: #24d81d;
-    padding-left: 8px;
-    padding-right: 6px;
-    padding-bottom: 4px;
-    position: relative;
-    word-break: break-all;
-    padding-top: -5px;
+.send_btn {
+  background-color: rgba(10, 51, 163, 0.5) !important;
+  border: 0 !important;
+  color: white !important;
+  cursor: pointer;
+  border-top-right-radius: 0;
 }
 
-.msg_container_right{
-    margin-top: auto;
-    margin-bottom: auto;
-    margin-right: 5px;
-    border-radius: 25px 5px 25px 25px;
-    background-color: #24d81d;
-    padding-left: 8px;
-    padding-right: 6px;
-    padding-bottom: 4px;
-    position: relative;
-    word-break: break-all;
-    padding-top: -5px;
+.card-footer {
+  border-radius: 0 0 15px 15px !important;
+  border-top: 0 !important;
+  padding: 0;
 }
 
-.msg_time{
-    font-size: 10px;
-    margin-top: -3px;
-    color: darkslategrey;
+.msg_card_body {
+  overflow-y: auto;
 }
 
-.contacts_body{
-    overflow-y: auto;
-    white-space: nowrap;
+.msg_container_left {
+  border-radius: 5px 25px 25px 25px;
+  background-color: #24d81d;
+  padding-left: 8px;
+  padding-right: 6px;
+  padding-bottom: 4px;
+  word-break: break-all;
+  padding-top: -5px;
 }
 
-.log-out{
-    margin-left: 0;
-    margin-top: 10px;
-    background-color: white;
-    height: 40px;
-    width: 20px;
-    text-align: center;
-    padding:0;
-    transition:400ms;
-    font-size: 10px;
+.msg_container_right {
+  border-radius: 25px 5px 25px 25px;
+  background-color: #24d81d;
+  padding-left: 8px;
+  padding-right: 6px;
+  padding-bottom: 4px;
+  word-break: break-all;
+  padding-top: 5px;
 }
 
-.log-out:hover{
-    width: 80px;
-    transition: 600ms;
-    font-size: 25px;
+.msg_time {
+  font-size: 10px;
+  margin-top: -3px;
+  color: darkslategrey;
+}
+
+.contacts_body {
+  overflow-y: auto;
+  white-space: nowrap;
+}
+
+.log-out {
+  margin-top: 1px;
+  background-color: white;
+  height: 40px;
+  width: 20px;
+  text-align: center;
+  padding: 0;
+  transition: 400ms;
+  font-size: 10px;
+}
+
+.log-out:hover {
+  width: 100%;
+  transition: 600ms;
+  font-size: 25px;
+}
+
+.container-man {
+  display: flex;
+  width: 820px;
+  min-width: 500px;
+  margin-top: 50px;
+  flex-direction: row;
+}
+
+.msg-card {
+  display: flex;
+  flex: 2;
+  margin-left: 5px;
+}
+
+.msg-type {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.settings {
+  margin-top: 10px;
+  display: flex;
+  flex: 0.25;
+  flex-direction: column;
 }

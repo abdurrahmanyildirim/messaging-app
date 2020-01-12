@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AlertifyService } from 'src/app/services/alertify.service';
 import { MessageUser } from 'src/app/models/messageUser';
 import { Router } from '@angular/router';
+import { RoleGuard } from 'src/app/guards/role.guard';
 
 @Component({
   selector: 'app-chat',

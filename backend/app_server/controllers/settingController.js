@@ -1,17 +1,17 @@
-var Room = require('../models/room');
-var User = require('../models/user');
+const Room = require('../models/room');
+const User = require('../models/user');
 
 module.exports.createRoom = (async (req, res) => {
 
-    var roomData = req.body;
+    let roomData = req.body;
 
-    var room = await Room.findOne({ roomName: roomData.roomName })
+    let room = await Room.findOne({ roomName: roomData.roomName })
 
     if (room) {
         return res.status(401).send({ message: 'Birden fazla aynı oda ismi olamaz.' })
     }
 
-    var newRoom = new Room(roomData);
+    let newRoom = new Room(roomData);
     newRoom.save((err) => {
         if (err) {
             return res.status(401).send({ message: err })
@@ -23,13 +23,13 @@ module.exports.createRoom = (async (req, res) => {
 })
 
 module.exports.getRooms = async (req, res) => {
-    var rooms = await Room.find();
+    const rooms = await Room.find();
 
     return res.status(200).send(rooms);
 }
 
 module.exports.deleteRoom = async (req, res) => {
-    var roomId = await req.params.roomId;
+    let roomId = await req.params.roomId;
 
     Room.deleteOne({ _id: roomId }, (err) => {
         if (err) {
@@ -42,7 +42,7 @@ module.exports.deleteRoom = async (req, res) => {
 
 module.exports.getUsers = async (req, res) => {
 
-    var users = await User.find();
+    const users = await User.find();
 
     return res.status(201).send(users);
 }

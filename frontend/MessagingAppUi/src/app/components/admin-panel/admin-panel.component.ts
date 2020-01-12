@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { SettingService } from 'src/app/services/setting.service';
 
 @Component({
   selector: 'app-admin-panel',
   templateUrl: './admin-panel.component.html',
-  styleUrls: ['./admin-panel.component.css']
+  styleUrls: ['./admin-panel.component.css'],
+  viewProviders: [SettingService]
 })
-export class AdminPanelComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+export class AdminPanelComponent {
 
 }

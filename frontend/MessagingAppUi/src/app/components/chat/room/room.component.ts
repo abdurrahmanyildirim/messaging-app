@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { Room } from 'src/app/models/room';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs';
@@ -15,12 +15,10 @@ declare var $: any;
 export class RoomComponent implements OnInit {
 
   rooms: Observable<Room[]>;
-  constructor(
-    private socket: Socket,
-    private chatComponent: ChatComponent,
+  constructor(private socket: Socket,
     private authService: AuthService,
-    private alertifyService: AlertifyService
-  ) {
+    private alertifyService: AlertifyService,
+    private injector: Injector) {
     this.setRoomArray();
   }
 
@@ -55,6 +53,7 @@ export class RoomComponent implements OnInit {
   getChosenRoomMessages(roomId) {
     $('.btn-rooms').removeClass('active');
     $('#' + roomId).addClass('active');
-    this.chatComponent.getChosenRoomMessages(roomId);
+    const chatComponent = this.injector.get(ChatComponent);
+    chatComponent.getChosenRoomMessages(roomId);
   }
 }

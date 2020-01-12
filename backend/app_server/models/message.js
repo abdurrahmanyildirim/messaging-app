@@ -1,8 +1,8 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var messageSchema = new Schema({
+const messageSchema = new Schema({
     from: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     to: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     fromNick: { type: String, required: true },
@@ -16,6 +16,6 @@ var messageSchema = new Schema({
         }]
 });
 
-var Message = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
 
 module.exports = Message;

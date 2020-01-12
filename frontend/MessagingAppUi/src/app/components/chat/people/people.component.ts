@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { AuthService } from 'src/app/services/auth.service';
 import { ActiveUser } from 'src/app/models/activeUser';
@@ -14,11 +14,12 @@ export class PeopleComponent implements OnInit {
 
   activeUsers: Observable<ActiveUser[]>;
   currentId: string;
-  constructor(
-    private socket: Socket,
+  
+  constructor(private socket: Socket,
     private authService: AuthService,
-    private chatComponent: ChatComponent
-  ) { }
+    private injector: Injector) {
+
+  }
 
   ngOnInit() {
     this.getActiveUsers();
@@ -37,7 +38,7 @@ export class PeopleComponent implements OnInit {
   }
 
   sendUserId(userId) {
-    this.chatComponent.getChosenUserMessages(userId);
+    this.injector.get(ChatComponent).getChosenUserMessages(userId);
   }
 
 

@@ -1,7 +1,26 @@
-.card{
-    border-radius: 25px;
+.card {
+  border-radius: 25px;
 }
 
-.setting-button{
-    border-radius: 20px;
+.setting-button {
+  border-radius: 20px;
+}
+
+.container-man {
+  display: flex;
+  width: 820px;
+  min-width: 500px;
+  margin-top: 50px;
+  flex-direction: row;
+}
+
+.menu-card {
+  display: flex;
+  flex: 1;
+}
+
+.main-card {
+  display: flex;
+  flex: 2;
+  margin-left: 3px;
 }

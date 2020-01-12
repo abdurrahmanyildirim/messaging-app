@@ -1,11 +1,12 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const config = require('../../config');
 
-var mongoDb = 'mongodb://localhost/MessaginApp';
+const connectionString = config.connection_strings.default;
 
-mongoose.connect(mongoDb, {useUnifiedTopology: true , useCreateIndex: true, useNewUrlParser: true }, (err) => {
+mongoose.connect(connectionString, { useUnifiedTopology: true, useCreateIndex: true, useNewUrlParser: true }, (err) => {
     if (err) {
         console.log(err);
     } else {
-        console.log('Bağlantı başarılı')
+        console.log('Db connection activeted');
     }
 })

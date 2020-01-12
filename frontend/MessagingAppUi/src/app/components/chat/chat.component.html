@@ -1,84 +1,66 @@
-<div class="row ">
-  <span class="col-3 offset-1">
-    <div class="card card-signin">
-      <div class="card-header">
-        <div class="row" style="padding: 0;">
-          <div class="col-4">
-            <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-              routerLink='friends' style="border-radius: 15px 3px 3px 3px;"><i class="fas fa-user-edit"></i></button>
-          </div>
-          <div class="col-4">
-            <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-              routerLink='rooms' style="border-radius: 3px 3px 3px 3px;">
-              <i class="fas fa-project-diagram"></i></button>
-          </div>
-          <div class="col-4">
-            <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
-              routerLink='people' style="border-radius: 3px 15px 3px 3px;"><i class="fas fa-users"></i></button>
-          </div>
-        </div>
-      </div>
-      <div class="card-body contacts_body">
-        <router-outlet></router-outlet>
-      </div>
+<div class="container-man">
+  <div class="card card-signin">
+    <div class="card-header msg-type">
+      <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
+        routerLink='friends' style="border-radius: 15px 3px 3px 3px;"><i class="fas fa-user-edit"></i></button>
+      <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
+        routerLink='rooms' style="border-radius: 3px 3px 3px 3px;">
+        <i class="fas fa-project-diagram"></i></button>
+      <button (click)="restValues()" type="button" class="btn btn-outline-info" routerLinkActive='active'
+        routerLink='people' style="border-radius: 3px 15px 3px 3px;"><i class="fas fa-users"></i></button>
     </div>
-  </span>
-  <span class="col-7" style="padding-right: 0;padding-left: 5px;">
-    <div class="card card-signin">
-      <div class="card-body msg_card_body" style="padding-top: 5px;" #content>
-        <span id="msg-body" #messages>
-          <!-- User Messages -->
-          <div *ngIf="userMessages; else roomMessageContent">
-            <div *ngFor="let message of userMessages">
-              <div class="d-flex mb-3" [ngClass]="{'
+    <div class="card-body contacts_body">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <div class="card card-signin msg-card">
+    <div class="card-body msg_card_body" style="padding-top: 10px;" #content>
+      <span id="msg-body" #messages>
+        <!-- User Messages -->
+        <div *ngIf="userMessages; else roomMessageContent">
+          <div *ngFor="let message of userMessages">
+            <div class="d-flex mb-3" [ngClass]="{'
                 justify-content-start':message.isFrom==false,'justify-content-end':message.isFrom==true}">
-                <div
-                  [ngClass]="{'msg_container_left':message.isFrom==false,'msg_container_right':message.isFrom==true}">
-                  {{message.content}}
-                  <br>
-                  <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
-                </div>
+              <div [ngClass]="{'msg_container_left':message.isFrom==false,'msg_container_right':message.isFrom==true}">
+                {{message.content}}
+                <br>
+                <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
               </div>
             </div>
           </div>
-          <!-- Room Messages -->
-          <ng-template #roomMessageContent>
-            <div *ngFor="let message of roomMessages">
-              <div class="d-flex justify-content-start mb-2">
-                <div class="msg_container_left">
-                  <strong>{{message.fromNick}} : </strong>
-                  {{message.content}}
-                  <br>
-                  <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
-                </div>
+        </div>
+        <!-- Room Messages -->
+        <ng-template #roomMessageContent>
+          <div *ngFor="let message of roomMessages">
+            <div class="d-flex justify-content-start mb-2">
+              <div class="msg_container_left">
+                <strong>{{message.fromNick}} : </strong>
+                {{message.content}}
+                <br>
+                <div class="msg_time">{{message.sendDate | date:'fullDate'}}</div>
               </div>
             </div>
-          </ng-template>
-
-        </span>
-      </div>
-      <div class="card-footer">
-        <div class="input-group">
-          <textarea [(ngModel)]="message" name="" class="form-control type_msg"
-            placeholder="Mesajınızı buraya yazınız..."></textarea>
-          <div (click)="sendMessage()" class="input-group-append">
-            <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
           </div>
+        </ng-template>
+      </span>
+    </div>
+    <div class="card-footer">
+      <div class="input-group">
+        <textarea [(ngModel)]="message" name="" class="form-control type_msg"
+          placeholder="Mesajınızı buraya yazınız..."></textarea>
+        <div (click)="sendMessage()" class="input-group-append">
+          <span class="input-group-text send_btn"><i class="fas fa-location-arrow"></i></span>
         </div>
       </div>
     </div>
-  </span>
-  <div class="col-1" style="padding-left: 0;">
+  </div>
+  <div class="settings">
+    <button class="justify-content-start" *ngIf="getRole()" routerLink="/admin-panel/room-setting" class="btn log-out"
+      style="margin-top: 2px;">
+      <i class="fas fa-tools"></i>
+    </button>
     <button class="justify-content-start" (click)="logOut()" class="btn log-out">
       <i class="fas fa-sign-out-alt"></i>
     </button>
-    <br>
-    <i *ngIf="getRole()">
-      <button class="justify-content-start" routerLink="/admin-panel/room-setting" class="btn log-out"
-        style="margin-top: 2px;">
-        <i class="fas fa-tools"></i>
-      </button>
-    </i>
-
   </div>
 </div>

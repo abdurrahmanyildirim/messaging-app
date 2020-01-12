@@ -1,7 +1,7 @@
-var ActiveUser = require('../models/activeUser');
-var User = require('../models/user');
-var Room = require('../models/room');
-var Message = require('../models/message');
+const ActiveUser = require('../models/activeUser');
+const User = require('../models/user');
+const Room = require('../models/room');
+const Message = require('../models/message');
 
 module.exports = (io) => {
 
@@ -15,7 +15,7 @@ module.exports = (io) => {
 
     const connectedUsers = {};
 
-    let addRoomMessage = (receivedData) => {
+    const addRoomMessage = (receivedData) => {
         Room.findOne({ _id: receivedData.targetRoomId }, '-__v', (err, data) => {
             if (err) {
                 console.log(err)
@@ -84,10 +84,10 @@ module.exports = (io) => {
         socket.on('change isRead', async (chosenUserId, userId) => {
             var arr = await Message
                 .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] });
-                
+            
             if (arr) {
                 var isFrom = arr.from == userId ? true : false;
-                //False olan mesaj sayısının bulunması için filter yapıyoruz.
+                // False olan mesaj sayısının bulunması için filter yapıyoruz.
                 let messages = arr.contents.filter((item) => {
                     return item.isRead === false;
                 })

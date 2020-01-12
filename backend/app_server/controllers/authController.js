@@ -1,6 +1,7 @@
-var crypto = require('crypto');
-var jwt = require('jsonwebtoken')
-var User = require('../models/user');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken')
+const User = require('../models/user');
+const config = require('../../config');
 
 module.exports.login = (req, res) => {
     if (!req.body.email || !req.body.password) {
@@ -8,8 +9,8 @@ module.exports.login = (req, res) => {
             message: 'Email ve Şifre boş bırakılamaz.',
         });
     } else {
-        var reqEmail = req.body.email;
-        var reqPassword = crypto.createHash('md5').update(req.body.password).digest("hex");
+        let reqEmail = req.body.email;
+        let reqPassword = crypto.createHash('md5').update(req.body.password).digest("hex");
 
         User.findOne({ email: reqEmail, password: reqPassword }, (err, data) => {
             if (err) {
@@ -18,7 +19,7 @@ module.exports.login = (req, res) => {
                 });
             } else if (!data) {
                 return res.status(400).send({
-                    message:'Böyle bir kullanıcı kaydı yoktur.'
+                    message: 'Böyle bir kullanıcı kaydı yoktur.'
                 })
             } else {
                 const token = jwt.sign({
@@ -26,7 +27,7 @@ module.exports.login = (req, res) => {
                     role: data.role,
                     email: data.email
                 },
-                    'secret_key',
+                    config.TOKEN_KEY,
                     {
                         expiresIn: "2d"
                     }
@@ -42,9 +43,9 @@ module.exports.register = (req, res) => {
     if (!req) {
         return res.sendStatus(404).send({ message: "Boş nesne gönderilemez." })
     } else {
-        var userData = req.body;
+        let userData = req.body;
 
-        var reqUser = new User(userData);
+        let reqUser = new User(userData);
 
         User.find({ email: reqUser.email, nickName: reqUser.nickName }, (err, data) => {
             if (err) {
@@ -73,7 +74,7 @@ module.exports.checkNickName = (req, res) => {
     if (!req.url) {
         return res.status(404).send({ message: "Kullanıcı adı boş olamaz." })
     } else {
-        var nickName = req.query.nickName;
+        let nickName = req.query.nickName;
         User.find({ nickName: nickName }, (err, data) => {
             if (data.length > 0) {
                 return res.status(400).send({ message: "Bu kullanıcı adı başka bir kişi tarafından kullanılmaktadır." })
@@ -83,5 +84,3 @@ module.exports.checkNickName = (req, res) => {
         })
     }
 }
-
-

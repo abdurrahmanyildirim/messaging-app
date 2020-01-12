@@ -1,5 +1,5 @@
-var authRoute = require('./authRoute');
-var settingRoute = require('./settingRoute');
+const authRoute = require('./authRoute');
+const settingRoute = require('./settingRoute');
 
 module.exports = (app) => {
     app.use('/auth', authRoute);
