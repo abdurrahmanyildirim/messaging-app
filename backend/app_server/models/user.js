@@ -8,7 +8,9 @@ const userSchema = new Schema({
     lastName: { type: String, required: true, trim: true },
     password: { type: String, required: true, trim: true },
     nickName: { type: String, required: true, unique: true, trim: true },
-    role: { type: String, required: true }
+    role: { type: String, required: true },
+    publicId: { type: String, trim: true },
+    url: { type: String, trim: true }
 });
 
 const User = mongoose.model('User', userSchema);

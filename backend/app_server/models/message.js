@@ -4,6 +4,16 @@ const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
     from: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    from: {
+        id: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
+        nick: { type: String, required: true, trim: true },
+        photo: String
+    },
+    to: {
+        id: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
+        nick: { type: String, required: true, trim: true },
+        photo: String
+    },
     to: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     fromNick: { type: String, required: true },
     toNick: { type: String, required: true },

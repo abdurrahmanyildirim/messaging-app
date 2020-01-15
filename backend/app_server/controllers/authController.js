@@ -84,3 +84,12 @@ module.exports.checkNickName = (req, res) => {
         })
     }
 }
+
+module.exports.decodeToken = async (req, res, next) => {
+    const authorization = req.headers.authorization;
+    const token = authorization.split(' ')[1];
+    const decodenToken = await jwt.decode(token, { key: config.TOKEN_KEY });
+    req.id = decodenToken._id;
+    req.role = decodenToken.role;
+    next();
+}

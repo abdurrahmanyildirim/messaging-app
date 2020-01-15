@@ -1,0 +1,4 @@
+<input style="display: none;" type="file" accept="image/jpeg/jpg" (change)="onChange($event)" #fileInput>
+
+<button (click)="fileInput.click()">Pick Image</button>
+<button (click)="uploadPhoto()">Upload</button>

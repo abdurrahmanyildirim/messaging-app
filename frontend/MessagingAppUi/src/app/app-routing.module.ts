@@ -12,6 +12,7 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
 import { RoomSettingComponent } from './components/admin-panel/room-setting/room-setting.component';
 import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
 import { RoleGuard } from './guards/role.guard';
+import { AccountSettingComponent } from './components/account-setting/component';
 
 const routes: Routes = [
   {
@@ -41,6 +42,9 @@ const routes: Routes = [
       { path: 'room-setting', component: RoomSettingComponent },
       { path: 'user-setting', component: UserSettingComponent }
     ]
+  },
+  {
+    path: 'account-setting', component: AccountSettingComponent
   },
   {
     path: '**', redirectTo: 'chat', pathMatch: 'full'

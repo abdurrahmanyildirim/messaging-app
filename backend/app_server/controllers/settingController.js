@@ -1,5 +1,7 @@
 const Room = require('../models/room');
 const User = require('../models/user');
+const jwt = require('jsonwebtoken')
+const config = require('../../config');
 
 module.exports.createRoom = (async (req, res) => {
 
@@ -41,8 +43,6 @@ module.exports.deleteRoom = async (req, res) => {
 }
 
 module.exports.getUsers = async (req, res) => {
-
     const users = await User.find();
-
     return res.status(201).send(users);
 }
