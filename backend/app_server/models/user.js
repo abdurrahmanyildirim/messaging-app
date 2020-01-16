@@ -10,7 +10,7 @@ const userSchema = new Schema({
     nickName: { type: String, required: true, unique: true, trim: true },
     role: { type: String, required: true },
     publicId: { type: String, trim: true },
-    url: { type: String, trim: true }
+    photo: { type: String, trim: true }
 });
 
 const User = mongoose.model('User', userSchema);
