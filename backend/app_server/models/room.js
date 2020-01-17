@@ -8,8 +8,9 @@ const roomSchema = new Schema({
         {
             from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
             fromNick: { type: String, required: true },
-            content: { type: String, require: true, trim: true },
-            sendDate: { type: Date, require: true, default: Date.now() }
+            photo: { type: String, trim: true },
+            content: { type: String, required: true, trim: true },
+            sendDate: { type: Date, required: true, default: Date.now() }
         }
     ],
     createdDate: { type: Date, required: true, default: Date.now() },

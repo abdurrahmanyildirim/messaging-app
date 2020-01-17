@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { AlertifyService } from 'src/app/services/alertify.service';
+import { LoginUser } from './model';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  loginUser: any = {};
+  loginUser: LoginUser;
 
   constructor(
     private authService: AuthService,

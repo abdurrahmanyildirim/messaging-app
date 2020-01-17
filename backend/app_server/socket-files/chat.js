@@ -9,49 +9,49 @@ module.exports = (io) => {
         const clients = io.sockets.clients().connected;
         const sockets = Object.values(clients);
         const users = sockets.map(s => s.user);
-
         return users;
     };
 
     const connectedUsers = {};
 
-    const addRoomMessage = (receivedData) => {
-        Room.findOne({ _id: receivedData.targetRoomId }, '-__v', (err, data) => {
+    const addRoomMessage = async (receivedData) => {
+        const room = await Room.findOne({ _id: receivedData.targetRoomId }, '-__v', (err) => {
             if (err) {
-                console.log(err)
-            } else {
-                User.findOne({ _id: receivedData.userId }, '-__v', (err, user) => {
-                    if (err) {
-                        console.log(err)
-                    }
-                    var message = {
-                        from: receivedData.userId,
-                        fromNick: user.nickName,
-                        content: receivedData.message,
-                        sendDate: Date.now()
-                    }
-                    data.messages.push(message);
-                    data.save((err) => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    })
+                console.log(err);
+                return;
+            }
+        });
+        const user = await User.findOne({ _id: receivedData.userId }, '-__v', (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        });
+        var message = {
+            from: receivedData.userId,
+            fromNick: user.nickName,
+            photo: user.photo,
+            content: receivedData.message,
+        };
 
-                    io.sockets.in(receivedData.targetRoomId).emit('message to room', message);
-                })
-
+        room.messages.push(message);
+        room.save((err) => {
+            if (err) {
+                console.log(err);
+                return;
             }
         })
 
+        io.sockets.in(receivedData.targetRoomId).emit('message to room', message);
     }
 
     const emitVisitors = () => {
         io.emit("visitors", getVisitors());
     };
 
-    io.on('connection', function (socket) {
+    io.on('connection', (socket) => {
 
-        socket.on('disconnect', function () {
+        socket.on('disconnect', () => {
             emitVisitors();
         });
 
@@ -64,11 +64,11 @@ module.exports = (io) => {
             socket.leave(roomId)
             socket.broadcast.in(roomId).emit('user left from room', socket.user.nickName);
         })
-        // TODO
+
         socket.on('message to room', (receivedData) => {
             addRoomMessage(receivedData)
         })
-        // TODO
+
         socket.on('roomMessages', (roomId, userId) => {
             Room.findOne({ _id: roomId }, '-__v', (err, data) => {
                 if (err) {
@@ -105,34 +105,37 @@ module.exports = (io) => {
             }
 
         })
-        // TODO
-        socket.on('userMessages', (chosenUserId, userId) => {
-            Message
-                .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v', (err, data) => {
+
+        socket.on('userMessages', async (chosenUserId, userId) => {
+            const message = await Message.findOne(
+                { $or: [{ 'from.id': userId, 'to.id': chosenUserId }, { 'from.id': chosenUserId, 'to.id': userId }] }, '-__v',
+                (err) => {
                     if (err) {
-                        console.log(err)
-                    } else {
-                        if (data) {
-                            var isFrom = data.from == userId ? true : false;
-                            let messages = data;
+                        console.log(err);
+                        return;
+                    }
+                });
 
-                            messages.contents.forEach((item) => {
-                                if (!isFrom) {
-                                    item.isFrom = !item.isFrom;
-                                }
-                            })
+            if (message) {
+                var isFrom = message.from.id === userId ? true : false;
 
-                            connectedUsers[userId].emit('userMessages', {
-                                messages: messages.contents
-                            });
-                        } else {
-                            connectedUsers[userId].emit('userMessages', {
-                                messages: null
-                            });
-                        }
-
+                message.contents.forEach((item) => {
+                    if (!isFrom) {
+                        item.isFrom = !item.isFrom;
                     }
                 })
+
+                connectedUsers[userId].emit('userMessages', {
+                    messages: message.contents
+                });
+            } else {
+                connectedUsers[userId].emit('userMessages', {
+                    messages: null
+                });
+            }
+
+
+
         })
 
         socket.on('message to user', async (receivedData) => {
@@ -198,7 +201,7 @@ module.exports = (io) => {
                         }
                     })
                 }
-
+                // TODO : İlk mesaj hatası giderilecek...
                 connectedUsers[receivedData.sourceUserId].emit('message to user', {
                     sourceId: receivedData.sourceUserId,
                     message: receivedData.message
@@ -278,10 +281,9 @@ module.exports = (io) => {
             })
         });
 
-        socket.on('get activeUsers', function () {
+        socket.on('get activeUsers', () => {
             emitVisitors();
         })
-
 
     })
 }

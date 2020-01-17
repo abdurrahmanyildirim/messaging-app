@@ -13,8 +13,6 @@ const messageSchema = new Schema({
         nick: { type: String, required: true, trim: true },
         photo: String
     },
-    fromNick: { type: String, required: true },
-    toNick: { type: String, required: true },
     contents: [
         {
             content: { type: String, required: true, trim: true },

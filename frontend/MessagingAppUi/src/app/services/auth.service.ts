@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AlertifyService } from './alertify.service';
-import { LoginUser } from '../models/loginUser';
+import { LoginUser } from '../components/auth/login/model';
 import { RegisterUser } from '../models/registerUser';
 
 @Injectable()
