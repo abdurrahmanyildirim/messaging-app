@@ -6,7 +6,7 @@ module.exports = {
     'defaultPhotoUrl': 'https://res.cloudinary.com/dtqmcrrqt/image/upload/v1574426306/newUser_kovvtp.png',
     'cloudinary_settings': {
         'cloud_name': 'dtqmcrrqt',
-        'api_key': '318435645266377',
-        'api_secret': 'kYpamUgIlm9xp8q6lfPTRhXIFrs'
+        'api_key': '*****',
+        'api_secret': '****************'
     }
 }
