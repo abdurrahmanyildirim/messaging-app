@@ -1,4 +1,17 @@
-<input style="display: none;" type="file" accept="image/jpeg/jpg" (change)="onChange($event)" #fileInput>
+<div class="container-man">
+    <div class="buttons">
+        <button class="btn btn-outline-info" routerLinkActive='active' routerLink='photo'>
+            Fotoğraf
+        </button>
+        <button class="btn btn-outline-info" routerLinkActive='active' routerLink='password'>
+            Şifre
+        </button>
+        <button class="btn btn-outline-info" routerLinkActive='active' routerLink='chat'>
+            Ana Sayfa
+        </button>
+    </div>
 
-<button (click)="fileInput.click()">Pick Image</button>
-<button (click)="uploadPhoto()">Upload</button>
+    <div class="settings">
+        <router-outlet></router-outlet>
+    </div>
+</div>

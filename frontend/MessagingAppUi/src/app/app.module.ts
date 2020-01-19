@@ -29,6 +29,8 @@ import { AccountSettingComponent } from './components/account-setting/component'
 // Guards
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
+import { PhotoComponent } from './components/account-setting/photo/component';
+import { PasswordComponent } from './components/account-setting/password/component';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { userid: 'asd' } };
 
@@ -45,7 +47,9 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3000', options: { 
     AdminPanelComponent,
     RoomSettingComponent,
     UserSettingComponent,
-    AccountSettingComponent
+    AccountSettingComponent,
+    PhotoComponent,
+    PasswordComponent
   ],
   imports: [
     BrowserModule,

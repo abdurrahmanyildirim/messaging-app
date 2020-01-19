@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { SettingService } from 'src/app/services/setting.service';
 import { AlertifyService } from 'src/app/services/alertify.service';
-import { Room } from 'src/app/models/room';
+import { Room } from '../../chat/room/model';
 import { Observable } from 'rxjs';
 
 @Component({

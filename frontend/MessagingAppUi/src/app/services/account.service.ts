@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Photo } from '../components/account-setting/photo/model';
 
 @Injectable()
 export class AccountService {
@@ -10,8 +12,12 @@ export class AccountService {
 
     }
 
-    upload(image: FormData) {
-        return this.http.post(this.baseUrl + 'upload', image);
+    upload(image: FormData): Observable<HttpEvent<Photo>> {
+        return this.http.post<Photo>(this.baseUrl + 'upload', image, { reportProgress: true, observe: 'events' });
+    }
+
+    getPhoto(): Observable<Photo> {
+        return this.http.get<Photo>(this.baseUrl + 'photo')
     }
 
 }

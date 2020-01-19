@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         data => {
           this.authService.saveToken(data.token);
           this.alertifyService.success('Giriş yapıldı.');
-          this.router.navigateByUrl('/countries');
+          this.router.navigateByUrl('/chat/friends');
         },
         err => {
           this.alertifyService.alert('Hatalı giriş! Lütfen tekrar deneyiniz.');

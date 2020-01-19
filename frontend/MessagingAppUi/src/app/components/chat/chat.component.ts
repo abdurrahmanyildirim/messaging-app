@@ -7,6 +7,7 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 import { MessageUser } from 'src/app/models/messageUser';
 import { Router } from '@angular/router';
 import { RoleGuard } from 'src/app/guards/role.guard';
+import { Role } from 'src/app/models/role';
 
 @Component({
   selector: 'app-chat',
@@ -24,12 +25,12 @@ export class ChatComponent implements OnInit, AfterViewInit {
   targetUserId: string;
   message = '';
 
-  constructor(
-    private socket: Socket,
+  constructor(private socket: Socket,
     private authService: AuthService,
     private alertifyService: AlertifyService,
-    private router: Router
-  ) { }
+    private router: Router) {
+
+  }
 
   ngOnInit() {
     this.getRole();
@@ -45,7 +46,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   getRole() {
-    if (this.authService.getCurrentAccountRole() === 'Admin') {
+    if (this.authService.getCurrentAccountRole() === Role.A) {
       return true;
     } else {
       return false;
@@ -94,7 +95,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   receiveRoomMessage() {
     this.socket.on('message to room', data => {
-      console.log(data);
       this.roomMessages.push(data);
     });
   }
@@ -119,7 +119,12 @@ export class ChatComponent implements OnInit, AfterViewInit {
         isFrom: isFrom
       };
       if (data.sourceId === currentId) {
-        this.userMessages.push(message);
+        try {
+          this.userMessages.push(message);
+        } catch (error) {
+          this.userMessages = [];
+          this.userMessages.push(message);
+        }
       }
       if (data.targetId === currentId && data.sourceId === this.targetUserId) {
         this.userMessages.push(message);

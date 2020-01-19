@@ -1,4 +1,3 @@
-const ActiveUser = require('../models/activeUser');
 const User = require('../models/user');
 const Room = require('../models/room');
 const Message = require('../models/message');
@@ -11,6 +10,12 @@ module.exports = (io) => {
         const users = sockets.map(s => s.user);
         return users;
     };
+
+    asyncForEach = async (array, callback) => {
+        for (let index = 0; index < array.length; index++) {
+            await callback(array[index], index, array);
+        }
+    }
 
     const connectedUsers = {};
 
@@ -32,6 +37,7 @@ module.exports = (io) => {
             fromNick: user.nickName,
             photo: user.photo,
             content: receivedData.message,
+            sendDate: Date.now()
         };
 
         room.messages.push(message);
@@ -83,41 +89,35 @@ module.exports = (io) => {
 
         socket.on('change isRead', async (chosenUserId, userId) => {
             let message = await Message
-                .findOne({ $or: [{ 'from.id': userId, 'to.id': chosenUserId }, { 'from.id': chosenUserId, 'to.id': userId }] });
+                .findOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] });
 
             if (message) {
-
-                const isFrom = message.from.id == userId ? true : false;
-
-                message = message.contents.filter(content => content.isRead === false);
-
+                const isFrom = message.from == userId ? true : false;
                 message.contents.map(content => {
-                    if (isFrom !== content.isFrom) {
+                    if (isFrom !== content.isFrom && content.isRead === false) {
                         content.isRead = true
                     }
                 });
-
-                message.save((err) => {
+                Message.updateOne({ $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, message, (err) => {
                     if (err) {
                         console.log(err);
                     }
-                });
+                })
             }
-
         })
 
         socket.on('userMessages', async (chosenUserId, userId) => {
+
             const message = await Message.findOne(
-                { $or: [{ 'from.id': userId, 'to.id': chosenUserId }, { 'from.id': chosenUserId, 'to.id': userId }] }, '-__v',
+                { $or: [{ from: userId, to: chosenUserId }, { from: chosenUserId, to: userId }] }, '-__v',
                 (err) => {
                     if (err) {
                         console.log(err);
                         return;
                     }
                 });
-
             if (message) {
-                var isFrom = message.from.id === userId ? true : false;
+                var isFrom = message.from == userId ? true : false;
 
                 message.contents.forEach((item) => {
                     if (!isFrom) {
@@ -133,9 +133,6 @@ module.exports = (io) => {
                     messages: null
                 });
             }
-
-
-
         })
 
         socket.on('message to user', async (receivedData) => {
@@ -148,9 +145,8 @@ module.exports = (io) => {
                         console.log(err)
                     }
                 }); // Daha önce iki kullanıcı arasında mesajlaşma olmuş mu onu kontrol ediyoruz.
-
             if (message) {
-                const isFrom = message.from.id == receivedData.sourceUserId ? true : false;
+                const isFrom = message.from == receivedData.sourceUserId ? true : false;
                 message.contents.push({
                     content: receivedData.message,
                     isFrom,
@@ -170,20 +166,13 @@ module.exports = (io) => {
                 });
 
                 if (users) {
-                    const from, to = {};
+                    let from, to = {};
+
                     users.forEach(user => {
-                        if (user._id === receivedData.sourceUserId) {
-                            from = {
-                                id: user._id,
-                                nick: user.nickName,
-                                photo: user.photo
-                            };
+                        if (user._id == receivedData.sourceUserId) {
+                            from = user._id
                         } else {
-                            to = {
-                                id: user._id,
-                                nick: user.nickName,
-                                photo: user.photo
-                            };
+                            to = user._id
                         }
                     })
                     const message = new Message({
@@ -201,53 +190,64 @@ module.exports = (io) => {
                         }
                     })
                 }
-                // TODO : İlk mesaj hatası giderilecek...
-                connectedUsers[receivedData.sourceUserId].emit('message to user', {
+            }
+            // TODO : İlk mesaj hatası giderilecek...
+            connectedUsers[receivedData.sourceUserId].emit('message to user', {
+                sourceId: receivedData.sourceUserId,
+                message: receivedData.message
+            })
+
+            if (connectedUsers[receivedData.targetUserId]) {
+                connectedUsers[receivedData.targetUserId].emit('message to user', {
+                    targetId: receivedData.targetUserId,
                     sourceId: receivedData.sourceUserId,
                     message: receivedData.message
                 })
-
-                if (connectedUsers[receivedData.targetUserId]) {
-                    connectedUsers[receivedData.targetUserId].emit('message to user', {
-                        targetId: receivedData.targetUserId,
-                        sourceId: receivedData.sourceUserId,
-                        message: receivedData.message
-                    })
-                }
             }
         });
 
-        socket.on('friends', (id) => {
-            Message.find({ $or: [{ 'from.id': id }, { 'to.id': id }] }, '-__v', (err, data) => {
+        socket.on('friends', async (id) => {
+
+            const message = await Message.find({ $or: [{ from: id }, { to: id }] }, '-__v', (err) => {
                 if (err) {
-                    console.log(err)
-                } else {
-                    let friends = [];
-                    data.forEach((item) => {
-                        const friend = {
-                            userId: item.from.id === id ? item.to.id : item.from.id,
-                            nickName: item.from.id === id ? item.to.nick : item.from.nick,
-                            photo: item.from.id === id ? item.to.photo : item.from.photo,
-                        }
-                        const isFrom = item.from.id == id ? false : true;
-                        let nonReadMessage = 0;
-                        item.contents.forEach(element => {
-                            if (element.isFrom === isFrom && element.isRead === false) {
-                                nonReadMessage++;
-                            }
-                            friend.lastMesssageDate = element.sendDate;
-                        });
-                        friend.nonReadMessageCount = nonReadMessage;
-
-                        friends.push(friend);
-                    })
-
-                    connectedUsers[id].emit('friends', {
-                        friends: friends
-                    });
+                    console.log(err);
+                    return;
                 }
-            })
-        });
+            });
+            let friends = await getFriends(message, id);
+
+            connectedUsers[id].emit('friends', {
+                friends: friends
+            });
+        })
+
+        getFriends = async (message, id) => {
+            let friends = [];
+            await asyncForEach(message, async value => {
+                let friend = {};
+                friend.userId = value.from == id ? value.to : value.from;
+                const user = await User.findById(friend.userId, (err, doc) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                });
+                const isFrom = value.from == id ? false : true;
+                let nonReadMessage = 0;
+                value.contents.forEach(element => {
+                    if (element.isFrom === isFrom && element.isRead === false) {
+                        nonReadMessage++;
+                    }
+                    friend.lastMesssageDate = element.sendDate;
+                });
+                friend.nonReadMessageCount = nonReadMessage;
+
+                friend.nickName = user.nickName;
+                friend.photo = user.photo;
+                friends.push(friend);
+            });
+            return friends;
+        }
 
         socket.on('rooms', (userId) => {
 
@@ -268,12 +268,12 @@ module.exports = (io) => {
                 if (err) {
                     console.log(err)
                 } else {
-                    var activeUser = await new ActiveUser({
+                    let activeUser = {
                         id: data._id,
                         fullName: (data.firstName + " " + data.lastName),
                         nickName: data.nickName,
-                        photo: data.url
-                    });
+                        photo: data.photo
+                    };
                     socket.user = activeUser;
                     connectedUsers[identity] = socket;
                     emitVisitors();

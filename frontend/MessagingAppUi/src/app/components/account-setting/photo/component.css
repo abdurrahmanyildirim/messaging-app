@@ -1,0 +1,37 @@
+.content {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.photo {
+  height: 100px;
+  width: 100px;
+  min-width: 60px;
+  min-height: 60px;
+  border-radius: 50px;
+  margin: 0 5px;
+}
+
+.img-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.button-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100%;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.btn {
+  width: 100%;
+  box-shadow: none !important;
+  outline: 0px !important;
+}

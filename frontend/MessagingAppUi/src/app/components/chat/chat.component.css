@@ -102,7 +102,6 @@
 .container-man {
   display: flex;
   width: 820px;
-  min-width: 500px;
   margin-top: 50px;
   flex-direction: row;
 }

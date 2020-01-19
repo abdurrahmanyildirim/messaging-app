@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Room } from '../models/room';
+import { Room } from '../components/chat/room/model';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 

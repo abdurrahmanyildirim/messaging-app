@@ -3,16 +3,8 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const messageSchema = new Schema({
-    from: {
-        id: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
-        nick: { type: String, required: true, trim: true },
-        photo: String
-    },
-    to: {
-        id: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
-        nick: { type: String, required: true, trim: true },
-        photo: String
-    },
+    from: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
+    to: { type: mongoose.SchemaTypes.ObjectId, required: true, ref: 'User' },
     contents: [
         {
             content: { type: String, required: true, trim: true },

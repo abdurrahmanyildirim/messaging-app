@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector } from '@angular/core';
-import { Room } from 'src/app/models/room';
+import { Room } from './model';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs';
 import { ChatComponent } from '../chat.component';

@@ -13,6 +13,8 @@ import { RoomSettingComponent } from './components/admin-panel/room-setting/room
 import { UserSettingComponent } from './components/admin-panel/user-setting/user-setting.component';
 import { RoleGuard } from './guards/role.guard';
 import { AccountSettingComponent } from './components/account-setting/component';
+import { PhotoComponent } from './components/account-setting/photo/component';
+import { PasswordComponent } from './components/account-setting/password/component';
 
 const routes: Routes = [
   {
@@ -44,7 +46,12 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'account-setting', component: AccountSettingComponent
+    path: 'account-setting', component: AccountSettingComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'photo', component: PhotoComponent },
+      { path: 'password', component: PasswordComponent }
+    ]
   },
   {
     path: '**', redirectTo: 'chat', pathMatch: 'full'

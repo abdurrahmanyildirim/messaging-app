@@ -1,9 +1,13 @@
+<i *ngIf="!friends">Loading</i>
 <div *ngFor="let friend of friends">
-  <button class="btn btn-outline-info btn-friends" id="{{friend.userId}}" (click)="sendUserId(friend.userId)"
-    style="width: 100%;border-radius: 25px;">
-    <b>{{friend.nickName}} </b>
-    <i *ngIf="friend.nonReadMessageCount>0">
-      <span class="badge badge-danger" id="{{friend.userId}}-badge">{{friend.nonReadMessageCount}}</span>
-    </i>
+  <button (click)="sendUserId(friend.userId)" id="{{friend.userId}}" class="person">
+    <div class="left">
+      <img class="person-img" [src]="friend.photo" alt="{{friend.nickName}}">
+      <div class="nick"> <strong> {{friend.nickName}} </strong> </div>
+    </div>
+    <div class="right">
+      <span *ngIf="friend.nonReadMessageCount>0" class="my-badge"
+        id="{{friend.userId}}-badge">{{friend.nonReadMessageCount}}</span>
+    </div>
   </button>
 </div>

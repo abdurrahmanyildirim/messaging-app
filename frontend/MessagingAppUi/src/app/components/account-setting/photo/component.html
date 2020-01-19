@@ -1,0 +1,19 @@
+<div *ngIf="showProgress" class="progress" style="margin-top: 8px; margin-bottom: 8px;">
+    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100"
+        aria-valuemin="0" aria-valuemax="100" style="width: 100%">Yükleniyor...</div>
+</div>
+<div class="content">
+    <div class="img-content">
+        <span>Mevcut</span>
+        <img *ngIf="currentPhoto" class="photo" [src]="currentPhoto.url" alt="Profile Photo">
+    </div>
+    <div *ngIf="newPhoto" class="img-content">
+        <span>Yeni</span>
+        <img class="photo" [src]="newPhoto" alt="New Profile Photo">
+    </div>
+    <div class="button-content">
+        <input style="display: none;" type="file" accept="image/jpeg/jpg/png" (change)="onChange($event)" #fileInput>
+        <button class="btn btn-primary" (click)="fileInput.click()">Fotoğraf Seç</button>
+        <button class="btn btn-primary" style="margin-top: 3px;" (click)="uploadPhoto()">Yükle</button>
+    </div>
+</div>
