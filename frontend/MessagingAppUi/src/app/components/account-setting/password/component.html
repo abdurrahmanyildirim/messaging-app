@@ -1,0 +1,10 @@
+<div class="content">
+    <input type="password" class="form-control" (keyup)="checkPassword($event)" placeholder="Şifre">
+    <span *ngIf="errPassword != 'default'" style="color: red;">* {{errPassword}}</span>
+    <input type="password" class="form-control" (keyup)="checkConfirmPassword($event)" [(value)]="confirmPassword"
+        placeholder="Şifre Tekrar">
+    <span *ngIf="errConfirmPassword!= 'default'" style="color: red;">*
+        {{errConfirmPassword}}</span>
+    <input (click)="changePassword()" [disabled]="change" class="btn btn-success form-control"
+        value="Şifre Değiştir">
+</div>

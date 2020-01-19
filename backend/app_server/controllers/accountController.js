@@ -1,6 +1,7 @@
 const cloudinary = require('cloudinary').v2;
 const config = require('../../config');
 const User = require('../models/user');
+const crypto = require('crypto');
 
 module.exports.imageUpload = async (req, res) => {
 
@@ -37,9 +38,8 @@ module.exports.imageUpload = async (req, res) => {
             return res.status(400).send('Fotoğraf yükleme başarısız.');
         }
     });
-    setTimeout(() => {
-        return res.status(201).json({ url: image.url });
-    }, 2000);
+
+    return res.status(201).json({ url: image.url });
 }
 
 module.exports.getPhoto = async (req, res) => {
@@ -50,5 +50,21 @@ module.exports.getPhoto = async (req, res) => {
     }
 
     return res.status(200).send({ url: account.photo });
+}
+
+module.exports.changePassword = async (req, res) => {
+    const user = await User.findById(req.id);
+    const newPassword = await crypto.createHash('md5').update(req.password).digest("hex");
+
+    user.password = newPassword;
+
+    User.updateOne({ _id: req.id }, user, (err) => {
+        if (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Şifre değiştirilemedi.' });
+        }
+
+        return res.status(200).send({ message: 'Şifre değiştirildi.' });
+    })
 }
 

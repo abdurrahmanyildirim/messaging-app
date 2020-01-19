@@ -13,7 +13,7 @@
     </div>
     <div class="button-content">
         <input style="display: none;" type="file" accept="image/jpeg/jpg/png" (change)="onChange($event)" #fileInput>
-        <button class="btn btn-primary" (click)="fileInput.click()">Fotoğraf Seç</button>
-        <button class="btn btn-primary" style="margin-top: 3px;" (click)="uploadPhoto()">Yükle</button>
+        <button class="btn btn-primary" [disabled]="showProgress" (click)="fileInput.click()">Fotoğraf Seç</button>
+        <button class="btn btn-primary" [disabled]="showProgress" style="margin-top: 3px;" (click)="uploadPhoto()">Yükle</button>
     </div>
 </div>

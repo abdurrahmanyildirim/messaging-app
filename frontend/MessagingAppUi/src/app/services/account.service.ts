@@ -20,4 +20,8 @@ export class AccountService {
         return this.http.get<Photo>(this.baseUrl + 'photo')
     }
 
+    changePassword(newPassword): Observable<any> {
+        return this.http.post(this.baseUrl + 'change-password', newPassword);
+    }
+
 }

@@ -22,10 +22,12 @@ export class PhotoComponent {
     }
 
     onChange(event: any) {
-        this.selectedPhoto = <File>event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = e => this.newPhoto = reader.result;
-        reader.readAsDataURL(this.selectedPhoto);
+        if (event.target.files[0]) {
+            this.selectedPhoto = <File>event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = e => this.newPhoto = reader.result;
+            reader.readAsDataURL(this.selectedPhoto);
+        }
     }
 
     uploadPhoto() {
