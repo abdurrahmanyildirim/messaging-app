@@ -14,4 +14,6 @@ Veri tabanı ve cloud--> MongoDb(local), Cloudinary
 Ui Kütüphaneleri --> Bootstrap, AlertifyJs, FontAwesome
 
 # Kullanım
-Projenin çalışabilmesi için indirdikten sonra backend>config.js dosyasına gidip kendi cloudinary hesabınıza ait olan cloud_name, api_key, api_secret alanlarını giriniz, aynı şekilde config dosyasında bulunan connection string'i kendi db bağlantınıza göre ayarlayınız. Üye olanlar için default olarak verdiğim foroğrafı'da config.js dosyasından değiştirebilirsiniz. 
+Projenin çalışabilmesi için indirdikten sonra backend>config.js dosyasına gidip kendi cloudinary hesabınıza ait olan cloud_name, api_key, api_secret alanlarını giriniz, aynı şekilde config dosyasında bulunan connection string'i kendi db bağlantınıza göre ayarlayınız. Üye olanlar için default olarak verdiğim foroğrafı'da config.js dosyasından değiştirebilirsiniz.
+
+Son olarak muhtemelen Angular sürümü farklı olduğu için hata verecektir. Terminalden Messagingappui konumuna gelip npm update yapmayı unutmayınız. :)
